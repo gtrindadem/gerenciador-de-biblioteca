@@ -1,0 +1,50 @@
+package model;
+
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Collection;
+
+import entity.Produto;
+
+public class ModelMySQL implements Model{
+
+	@Override
+    public Collection<Produto> loadProdutos() {
+        Collection<Produto> produtos = new ArrayList<>();
+		
+        InputStream is;
+        InputStreamReader isr;
+        BufferedReader br;
+
+        try {
+            
+        }catch(IOException e) {
+            e.printStackTrace();
+        }
+
+        return produtos;
+    }
+
+    @Override
+    public void saveProdutos(Collection<Produto> produtos) {
+    	try(Connection connection = DriverManager.getConnection(URL, USER, PASS)){
+
+			Statement stm = connection.createStatement();
+			int r = stm.executeUpdate(update);
+			System.out.println("Linhas modificadas: " + r);
+
+		} catch(SQLException e) {
+			e.printStackTrace();
+		}
+    }
+
+}

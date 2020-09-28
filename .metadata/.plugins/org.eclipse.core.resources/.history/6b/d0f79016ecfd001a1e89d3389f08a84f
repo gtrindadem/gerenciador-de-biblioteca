@@ -1,0 +1,28 @@
+package model;
+
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Collection;
+
+import entity.Produto;
+import model.JDBCConnector;
+
+public class ModelMySQL implements Model{
+	private String DATABASE;
+	
+	@Override
+    public Collection<Produto> loadProdutos() {
+		
+		return null;
+    }
+
+    @Override
+    public void saveProdutos(Collection<Produto> produtos) {
+    	
+    }
+
+}

@@ -1,0 +1,9 @@
+package test;
+
+import view.Janela;
+
+public class testJanela {
+    public static void main(String[] args) {
+        new Janela();
+    }
+}

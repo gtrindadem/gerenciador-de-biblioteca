@@ -1,0 +1,54 @@
+package model;
+
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Collection;
+
+import entity.Produto;
+import model.JDBCConnector;
+
+public class ModelMySQL implements Model{
+	private final String DATABASE = "mercado";
+	private final String URL = "jdbc:mysql://localhost:3306/" + DATABASE;
+	private final String USER = "root";
+	private final String PASS = "";
+	
+	@Override
+    public Collection<Produto> loadProdutos() {
+		Collection<Produto> produtos = new ArrayList<>();
+		
+		try {
+			Connection connection = DriverManager.getConnection(URL, USER, PASS);
+			Statement stm = connection.createStatement();
+			ResultSet rs = stm.executeQuery("SELECT * FROM Produto;");
+			
+			Produto produto;
+			while(rs.next()) {
+				produto = new Produto(Integer.parseInt(rs.getString(1)), rs.getString(2), Double.parseDouble(rs.getString(3)));
+				produtos.add(produto);
+			}
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return produtos;
+    }
+
+    @Override
+    public void saveProdutos(Produto produto) {
+    	String insertProd = "INSERT Produto VALUES(" + produto.getId() + ", \"" + produto.getNome() + "\"," + produto.getValor() + ");";
+		try {
+			Connection connection = DriverManager.getConnection(URL, USER, PASS);
+			Statement stm = connection.createStatement();
+			stm.execute(insertProd);
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}
+    }
+
+}

@@ -1,0 +1,9 @@
+package test;
+
+import model.JDBCConnector;
+
+public class testJDBC {
+	public static void main(String[] args) {
+		JDBCConnector.fazConexao();
+	}
+}

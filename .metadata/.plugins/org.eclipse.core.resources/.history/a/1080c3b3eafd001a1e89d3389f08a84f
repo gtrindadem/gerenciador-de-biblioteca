@@ -1,0 +1,60 @@
+package model;
+
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Collection;
+
+import entity.Produto;
+
+public class ModelMySQL implements Model{
+
+	@Override
+    public Collection<Produto> loadProdutos() {
+        Collection<Produto> produtos = new ArrayList<>();
+		
+        InputStream is;
+        InputStreamReader isr;
+        BufferedReader br;
+
+        try {
+            
+        }catch(IOException e) {
+            e.printStackTrace();
+        }
+
+        return produtos;
+    }
+
+    @Override
+    public void saveProdutos(Collection<Produto> produtos) {
+        OutputStream os;
+            OutputStreamWriter osw;
+            PrintWriter pw;
+
+            try {
+                os = new FileOutputStream("files/produtos.csv");
+                osw = new OutputStreamWriter(os, StandardCharsets.UTF_8);
+                pw = new PrintWriter(osw, true);
+
+                for(Produto produto: produtos) {
+                        pw.println(produto.getId() + "," + produto.getNome() + "," + produto.getValor());
+                }
+
+                os.close();
+                osw.close();
+                pw.close();
+            }catch(IOException e) {
+                e.printStackTrace();
+            }
+    }
+
+}

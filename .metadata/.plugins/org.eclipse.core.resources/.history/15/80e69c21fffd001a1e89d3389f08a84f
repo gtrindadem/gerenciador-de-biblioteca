@@ -1,0 +1,162 @@
+package view;
+
+import entity.Produto;
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.event.ActionListener;
+import java.util.Collection;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.table.DefaultTableModel;
+
+public class Janela extends JFrame implements View{
+
+	JTable tabela;
+    DefaultTableModel dtm;
+    
+    JTextField inputId;
+    JTextField inputNome;
+    JTextField inputPreco;
+    
+    JButton botaoListar;
+    JButton botaoCadastrar;
+    
+    public Janela(){
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLayout(new BoxLayout(getContentPane(), BoxLayout.PAGE_AXIS));
+        setBounds(810, 390, 300, 300);
+        setTitle("Mercado");
+        
+        // PANEL 1 - LISTAR
+        JPanel panelListar = new JPanel();
+        panelListar.setLayout(new BoxLayout(panelListar, BoxLayout.PAGE_AXIS));
+        
+        // Tabela
+        dtm = new DefaultTableModel(new Object[] {"ID", "Nome", "Valor (R$)"}, 0) ;
+        tabela = new JTable(dtm);
+        tabela.getColumnModel().getColumn(0).setPreferredWidth(1);
+        tabela.getColumnModel().getColumn(0).setPreferredWidth(5);
+        tabela.getColumnModel().getColumn(0).setPreferredWidth(5);
+        JScrollPane tabelaScrollPanel = new JScrollPane(tabela);
+        panelListar.add(tabelaScrollPanel);
+        
+        // Botão "Listar Produtos"
+        botaoListar = new JButton("Listar Produtos");
+        JPanel panelBotaoListar = new JPanel();
+        panelBotaoListar.setLayout(new FlowLayout(FlowLayout.TRAILING));
+        panelBotaoListar.add(botaoListar);
+        panelListar.add(panelBotaoListar);
+        
+        // PANEL 2 - CADASTRAR
+        JPanel panelCadastrar = new JPanel();
+        panelCadastrar.setLayout(new BoxLayout(panelCadastrar, BoxLayout.PAGE_AXIS));
+        
+        // Label "Cadastrar Produto"
+        JPanel panelLabelCadastrar = new JPanel();
+        panelLabelCadastrar.setLayout(new FlowLayout(FlowLayout.LEADING));
+        panelLabelCadastrar.add(new JLabel("CADASTRAR PRODUTO:"));
+        panelCadastrar.add(panelLabelCadastrar);
+        
+        // Panel form
+        inputId = new JTextField(3);
+        inputNome = new JTextField(20);
+        inputPreco = new JTextField(5);
+        
+        JPanel panelCadastro = new JPanel();
+        panelCadastro.setLayout(new GridBagLayout());
+        GridBagConstraints c = new GridBagConstraints();
+        c.gridx = 0;
+        c.gridy = 1;
+        c.anchor = GridBagConstraints.LINE_END;
+        panelCadastro.add(new JLabel("ID: "), c);
+        c.gridx = 1;
+        c.gridy = 1;
+        c.anchor = GridBagConstraints.LINE_START;
+        panelCadastro.add(inputId, c);
+        c.gridx = 0;
+        c.gridy = 2;
+        c.anchor = GridBagConstraints.LINE_END;
+        panelCadastro.add(new JLabel("NOME: "), c);
+        c.gridx = 1;
+        c.gridy = 2;
+        c.anchor = GridBagConstraints.LINE_START;
+        panelCadastro.add(inputNome, c);
+        c.gridx = 0;
+        c.gridy = 3;
+        c.anchor = GridBagConstraints.LINE_END;
+        panelCadastro.add(new JLabel("PREÇO: "), c);
+        c.gridx = 1;
+        c.gridy = 3;
+        c.anchor = GridBagConstraints.LINE_START;
+        panelCadastro.add(inputPreco, c);
+        panelCadastrar.add(panelCadastro);
+        
+        // Botão "Cadastrar"
+        botaoCadastrar = new JButton("Cadastrar");
+        JPanel panelBotaoCadastrar = new JPanel();
+        panelBotaoCadastrar.setLayout(new FlowLayout(FlowLayout.TRAILING));
+        panelBotaoCadastrar.add(botaoCadastrar);
+        panelCadastrar.add(panelBotaoCadastrar);
+        
+        add(panelListar, BorderLayout.CENTER);
+        add(panelCadastrar, BorderLayout.CENTER);
+        
+        setVisible(true);
+    }
+    
+    @Override
+    public void setMostraProdutoListener(ActionListener al) {
+        botaoListar.addActionListener(al);
+    }
+
+    @Override
+    public void mostraProdutos(Collection<Produto> produtos) {
+        dtm.setNumRows(0);
+        for(Produto produto: produtos){
+            Object[] linha = new Object[] {produto.getId(), produto.getNome(), produto.getValor()};
+            dtm.addRow(linha);
+        }
+    }
+
+    @Override
+    public void setCadastraProdutoListener(ActionListener al) {
+        botaoCadastrar.addActionListener(al);
+    }
+
+    @Override
+    public int getIdProduto() {
+    	int id = -1;
+    	try {
+    		Integer.parseInt(inputId.getText());
+    	}catch(NumberFormatException e) {
+    		alert("O campo ID precisa ser um número inteiro positivo.");
+    	}
+    	return id;
+    }
+
+    @Override
+    public String getNomeProduto() {
+    	String nome = null;
+    	if(inputNome.getText().equals(""));
+    }
+
+    @Override
+    public double getValorProduto() {
+        return Double.parseDouble(inputPreco.getText());
+    }
+
+	@Override
+	public void alert(String msg) {
+		JOptionPane.showMessageDialog(null, msg);
+	}
+    
+}

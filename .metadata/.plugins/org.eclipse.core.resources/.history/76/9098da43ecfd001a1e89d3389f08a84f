@@ -1,0 +1,31 @@
+package model;
+
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Collection;
+
+import entity.Produto;
+import model.JDBCConnector;
+
+public class ModelMySQL implements Model{
+	private final String DATABASE = "mercado";
+	private final String URL = "jdbc:mysql://localhost:3306/" + DATABASE;
+	private final String USER = "root";
+	private final String PASS = "";
+	
+	@Override
+    public Collection<Produto> loadProdutos() {
+		
+		return null;
+    }
+
+    @Override
+    public void saveProdutos(Collection<Produto> produtos) {
+    	
+    }
+
+}

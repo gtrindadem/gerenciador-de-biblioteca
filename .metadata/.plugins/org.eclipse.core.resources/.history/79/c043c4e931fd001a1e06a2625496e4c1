@@ -1,0 +1,9 @@
+import controller.Controller;
+import model.ModelCSV;
+import view.Janela;
+
+public class testController {
+    public static void main(String[] args) {
+        new Controller(new Janela(), new ModelCSV());
+    }
+}

@@ -1,0 +1,9 @@
+package view;
+
+public class JanelaErro {
+	String msgErro;
+	public JanelaErro(String msg) {
+		msgErro = msg;
+		
+	}
+}

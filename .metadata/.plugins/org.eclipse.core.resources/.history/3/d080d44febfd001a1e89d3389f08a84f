@@ -1,0 +1,52 @@
+package model;
+
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collection;
+
+import entity.Produto;
+import model.JDBCConnector;
+
+public class ModelMySQL implements Model{
+
+	@Override
+    public Collection<Produto> loadProdutos() {
+		
+        Collection<Produto> produtos = new ArrayList<>() {
+        try {
+            
+        }catch(IOException e) {
+            e.printStackTrace();
+        }
+
+        return produtos;
+    }
+
+    @Override
+    public void saveProdutos(Collection<Produto> produtos) {
+    	try(Connection connection = DriverManager.getConnection(URL, USER, PASS)){
+
+			Statement stm = connection.createStatement();
+			int r = stm.executeUpdate(update);
+			System.out.println("Linhas modificadas: " + r);
+
+		} catch(SQLException e) {
+			e.printStackTrace();
+		}
+    }
+
+	@Override
+	public Collection<Produto> loadProdutos() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void saveProdutos(Collection<Produto> produtos) {
+		// TODO Auto-generated method stub
+		
+	}
+}
