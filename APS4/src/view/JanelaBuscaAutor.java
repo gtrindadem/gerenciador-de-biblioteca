@@ -3,8 +3,10 @@ package view;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.event.ActionListener;
-import java.util.Map;
+import java.util.Collection;
+import java.util.Enumeration;
 
+import javax.swing.AbstractButton;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -15,12 +17,15 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
+import entity.Autor;
 import entity.Editora;
 
 public class JanelaBuscaAutor extends JFrame {
 	JTextField txtFldBuscaAutor;
 	JButton btnBuscaAutor;
 	DefaultTableModel dtm;
+	ButtonGroup bg;
+	JRadioButton porNome;
 	
 	public JanelaBuscaAutor() {
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
@@ -38,9 +43,10 @@ public class JanelaBuscaAutor extends JFrame {
 		add(scrollPane, BorderLayout.PAGE_START);
 		
 		JPanel panelBuscaEditora = new JPanel(new FlowLayout());
-		JRadioButton porNome = new JRadioButton("Por Nome");
+		porNome = new JRadioButton("Por Nome");
 		JRadioButton porSobrenome = new JRadioButton("Por Sobrenome");
-		ButtonGroup bg = new ButtonGroup();
+		porNome.setSelected(true);
+		bg = new ButtonGroup();
 		bg.add(porNome);
 		bg.add(porSobrenome);
 		panelBuscaEditora.add(porNome);
@@ -55,19 +61,19 @@ public class JanelaBuscaAutor extends JFrame {
 		pack();
 	}
 	
-	public void setActionListenerBuscarEditora(ActionListener e) {
+	public void setActionListenerBuscarAutor(ActionListener e) {
 		btnBuscaAutor.addActionListener(e);
 	}
 	
-	public void mostraEditoras(Map<Integer, Editora> editoras) {
+	public void mostraAutores(Collection<Autor> autores) {
 		dtm.setNumRows(0);
-		for(int idEditora: editoras.keySet()) {
-			Object[] linha = new Object[] {idEditora, editoras.get(idEditora).getName()};
-			dtm.addRow(linha);
+		for(Autor autor: autores) {
+			Object[] linha = new Object[] {autor.getId(), autor.getNome(), autor.getSobrenome()};
+            dtm.addRow(linha);
 		}
 	}
 	
-	public String getNome() {
+	public String getInputNome() {
 		return txtFldBuscaAutor.getText();
 	}
 	

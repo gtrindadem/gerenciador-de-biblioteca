@@ -6,23 +6,19 @@ import java.awt.event.ActionListener;
 import java.util.Collection;
 import java.util.Map;
 
-import javax.swing.DefaultListModel;
-import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JList;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import javax.swing.JScrollPane;
 
+import entity.Autor;
 import entity.Editora;
 import entity.Livro;
 
 public class JanelaHome extends JFrame implements View {
-
-	private static final long serialVersionUID = 1L;
 	JanelaBuscaLivro janelaBuscaLivro = new JanelaBuscaLivro();
 	JanelaBuscaEditora janelaBuscaEditora = new JanelaBuscaEditora();
+	JanelaBuscaAutor janelaBuscaAutor = new JanelaBuscaAutor();
 	
 	public JanelaHome() {
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -48,6 +44,10 @@ public class JanelaHome extends JFrame implements View {
 		JMenuItem menuItemConsultarEditoras = new JMenuItem("Consultar Editoras");
 		menuConsulta.add(menuItemConsultarEditoras);
 		menuItemConsultarEditoras.addActionListener(new ActionAbrirJanela(janelaBuscaEditora));
+		
+		JMenuItem menuItemConsultarAutores = new JMenuItem("Consultar Autores");
+		menuConsulta.add(menuItemConsultarAutores);
+		menuItemConsultarAutores.addActionListener(new ActionAbrirJanela(janelaBuscaAutor));
 		
 		setVisible(true);
 	}
@@ -94,5 +94,29 @@ public class JanelaHome extends JFrame implements View {
 	public void listaEditoras(Map<Integer, Editora> editoras) {
 		janelaBuscaEditora.mostraEditoras(editoras);
 	}
+
+	@Override
+	public void setActionListenerBuscaAutor(ActionListener e) {
+		janelaBuscaAutor.setActionListenerBuscarAutor(e);
+	}
+
+	@Override
+	public String getNomeAutor() {
+		return janelaBuscaAutor.getInputNome();
+	}
+
+	@Override
+	public void listaAutores(Collection<Autor> autores) {
+		janelaBuscaAutor.mostraAutores(autores);
+	}
+
+	@Override
+	public int getTipoBuscaAutor() {
+		if(janelaBuscaAutor.porNome.isSelected()) {
+			return 0;
+		}
+		return 1;
+	}
+	
 
 }

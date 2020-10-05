@@ -65,14 +65,14 @@ public class DaoMySql implements Dao {
 
 	@Override
 	public Collection<Autor> buscaAutorPorNome(String nome) {
-		String qBusca = "SELECT * FROM authors WHERE name LIKE ?";
+		String qBusca = "SELECT * FROM authors WHERE fname LIKE ?";
 		
 		return buscaAutor(qBusca, nome);
 	}
 
 	@Override
 	public Collection<Autor> buscaAutorPorSobrenome(String nome) {
-		String qBusca = "SELECT * FROM authors WHERE fname LIKE ?";
+		String qBusca = "SELECT * FROM authors WHERE name LIKE ?";
 		
 		return buscaAutor(qBusca, nome);
 	}
