@@ -15,15 +15,20 @@ public interface View {
 	public String getTituloBuscaLivro();
 	public void listaLivros(Collection<Livro> livros);
 	
+	public void setActionListenerCadastraLivro(ActionListener e);
+	public String getTituloCadastraLivro();
+	public String getIsbnCadastraLivro();
+	public int getIdEditoraCadastraLivro();
+	public float getPrecoCadastraLivro();
+	
 	//Editora
-	public String getNomeBuscaEditora();
 	public void setActionListenerBuscaEditora(ActionListener e);
+	public String getNomeBuscaEditora();
 	public void listaEditoras(Map<Integer, Editora> editoras);
 	
 	//Autor
 	public void setActionListenerBuscaAutor(ActionListener e);
 	public String getNomeAutor();
 	public void listaAutores(Collection<Autor> autores);
-	public int getTipoBuscaAutor();
 	
 }

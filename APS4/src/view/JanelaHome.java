@@ -16,11 +16,21 @@ import entity.Editora;
 import entity.Livro;
 
 public class JanelaHome extends JFrame implements View {
-	JanelaBuscaLivro janelaBuscaLivro = new JanelaBuscaLivro();
-	JanelaBuscaEditora janelaBuscaEditora = new JanelaBuscaEditora();
-	JanelaBuscaAutor janelaBuscaAutor = new JanelaBuscaAutor();
+	JanelaBuscaLivro janelaBuscaLivro;
+	JanelaCadastraLivro janelaCadastraLivro;
+	
+	JanelaBuscaEditora janelaBuscaEditora;
+	
+	JanelaBuscaAutor janelaBuscaAutor;	
 	
 	public JanelaHome() {
+		janelaBuscaLivro = new JanelaBuscaLivro();
+		janelaCadastraLivro = new JanelaCadastraLivro();
+		
+		janelaBuscaEditora = new JanelaBuscaEditora();
+		
+		janelaBuscaAutor = new JanelaBuscaAutor();
+		
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		initComponents();
 	}
@@ -37,6 +47,7 @@ public class JanelaHome extends JFrame implements View {
 		menuBar.add(menuConsulta);
 		menuBar.add(menuCadastro);
 		
+		// ----- Menu Consultar -----
 		JMenuItem menuItemConsultarLivros = new JMenuItem("Consultar Livros");
 		menuConsulta.add(menuItemConsultarLivros);
 		menuItemConsultarLivros.addActionListener(new ActionAbrirJanela(janelaBuscaLivro));
@@ -48,6 +59,11 @@ public class JanelaHome extends JFrame implements View {
 		JMenuItem menuItemConsultarAutores = new JMenuItem("Consultar Autores");
 		menuConsulta.add(menuItemConsultarAutores);
 		menuItemConsultarAutores.addActionListener(new ActionAbrirJanela(janelaBuscaAutor));
+		
+		// ----- Menu Cadastrar -----
+		JMenuItem menuItemCadastrarLivro = new JMenuItem("Cadastrar Livro");
+		menuCadastro.add(menuItemCadastrarLivro);
+		menuItemCadastrarLivro.addActionListener(new AbrirCadastrarLivro());
 		
 		setVisible(true);
 	}
@@ -61,19 +77,20 @@ public class JanelaHome extends JFrame implements View {
 		
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			janela.setVisible(true);
+			this.janela.setVisible(true);
 		}
 		
 	}
-
+	
+	//Livro
 	@Override
 	public void setActionListenerBuscaLivro(ActionListener e) {
-		janelaBuscaLivro.setActionListenerBuscarLivro(e);
+		this.janelaBuscaLivro.setActionListenerBuscarLivro(e);;
 	}
 
 	@Override
 	public String getTituloBuscaLivro() {
-		return janelaBuscaLivro.getTitulo();
+		return this.janelaBuscaLivro.getTitulo();
 	}
 
 	@Override
@@ -81,8 +98,46 @@ public class JanelaHome extends JFrame implements View {
 		janelaBuscaLivro.mostraLivros(livros);
 	}
 	
+	class AbrirCadastrarLivro implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			janelaCadastraLivro.setVisible(true);
+			janelaCadastraLivro.janelaBuscaEditora = janelaBuscaEditora;
+			janelaCadastraLivro.janelaBuscaAutor = janelaBuscaAutor;
+		}
+		
+	}
+	
+	@Override
+	public void setActionListenerCadastraLivro(ActionListener e) {
+		janelaCadastraLivro.setActionListenerCadastraLivro(e);
+	}
+	
+	@Override
+	public String getTituloCadastraLivro() {
+		return janelaCadastraLivro.getTitulo();
+	}
+
+	@Override
+	public String getIsbnCadastraLivro() {
+		return janelaCadastraLivro.getIsbn();
+	}
+
+	@Override
+	public int getIdEditoraCadastraLivro() {
+		return janelaCadastraLivro.getIdEditora();
+	}
+
+	@Override
+	public float getPrecoCadastraLivro() {
+		return janelaCadastraLivro.getPreco();
+	}
+	
+	
+	//Editora
 	public void setActionListenerBuscaEditora(ActionListener e) {
-		janelaBuscaEditora.setActionListenerBuscarEditora(e);
+		janelaBuscaEditora.setActionListenerBuscaEditora(e);
 	}
 	
 	@Override
@@ -95,6 +150,7 @@ public class JanelaHome extends JFrame implements View {
 		janelaBuscaEditora.mostraEditoras(editoras);
 	}
 
+	// Autor
 	@Override
 	public void setActionListenerBuscaAutor(ActionListener e) {
 		janelaBuscaAutor.setActionListenerBuscarAutor(e);
@@ -109,14 +165,5 @@ public class JanelaHome extends JFrame implements View {
 	public void listaAutores(Collection<Autor> autores) {
 		janelaBuscaAutor.mostraAutores(autores);
 	}
-
-	@Override
-	public int getTipoBuscaAutor() {
-		if(janelaBuscaAutor.porNome.isSelected()) {
-			return 0;
-		}
-		return 1;
-	}
-	
 
 }

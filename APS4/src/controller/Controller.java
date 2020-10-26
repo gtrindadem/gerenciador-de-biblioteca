@@ -20,6 +20,7 @@ public class Controller {
 		view.setActionListenerBuscaLivro(new ActionBuscaLivro());
 		view.setActionListenerBuscaEditora(new ActionBuscaEditora());
 		view.setActionListenerBuscaAutor(new ActionBuscaAutor());
+		view.setActionListenerCadastraLivro(new ActionCadastraLivro());
 	}
 
 	class ActionBuscaLivro implements ActionListener{
@@ -44,14 +45,21 @@ public class Controller {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			switch(view.getTipoBuscaAutor()) {
-				case 0:
-					view.listaAutores(dao.buscaAutorPorNome(view.getNomeAutor()));
-					break;
-				case 1:
-					view.listaAutores(dao.buscaAutorPorSobrenome(view.getNomeAutor()));
-					break;
-			}
+			view.listaAutores(dao.buscaAutor(view.getNomeAutor()));
+		}
+		
+	}
+	
+	class ActionCadastraLivro implements ActionListener{
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			String titulo = view.getTituloCadastraLivro();
+			String isbn = view.getIsbnCadastraLivro();
+			int idEditora = view.getIdEditoraCadastraLivro();
+			float preco = view.getPrecoCadastraLivro();
+			
+			dao.cadastraLivro(titulo, isbn, idEditora, preco);
 		}
 		
 	}

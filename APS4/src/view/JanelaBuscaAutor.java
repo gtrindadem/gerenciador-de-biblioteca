@@ -1,6 +1,7 @@
 package view;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionListener;
 import java.util.Collection;
@@ -10,6 +11,7 @@ import javax.swing.AbstractButton;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
@@ -24,6 +26,7 @@ public class JanelaBuscaAutor extends JFrame {
 	JTextField txtFldBuscaAutor;
 	JButton btnBuscaAutor;
 	DefaultTableModel dtm;
+	JTable tabela;
 	ButtonGroup bg;
 	JRadioButton porNome;
 	
@@ -33,32 +36,31 @@ public class JanelaBuscaAutor extends JFrame {
 	}
 	
 	private void initComponents() {
-		setBounds(765, 445, 400, 200);
-		
+		setBounds(765, 445, 420, 235);
 		setLayout(new BorderLayout());
 		
-		dtm = new DefaultTableModel(new Object[] {"ID", "Nome", "Sobrenome"}, 0);
-		JTable tabela = new JTable(dtm);
+		// Area da tabela
+		dtm = new DefaultTableModel(new Object[] {"ID", "Nome", "Sobrenome"}, 0) {
+			@Override
+			public boolean isCellEditable(int row, int column) {
+				return false;
+			}
+		};
+		tabela = new JTable(dtm);
+		tabela.getColumnModel().getColumn(0).setMaxWidth(50);
 		JScrollPane scrollPane = new JScrollPane(tabela);
+		scrollPane.setPreferredSize(new Dimension(200,150));
 		add(scrollPane, BorderLayout.PAGE_START);
 		
-		JPanel panelBuscaEditora = new JPanel(new FlowLayout());
-		porNome = new JRadioButton("Por Nome");
-		JRadioButton porSobrenome = new JRadioButton("Por Sobrenome");
-		porNome.setSelected(true);
-		bg = new ButtonGroup();
-		bg.add(porNome);
-		bg.add(porSobrenome);
-		panelBuscaEditora.add(porNome);
-		panelBuscaEditora.add(porSobrenome);
-		
-		txtFldBuscaAutor = new JTextField(25);
+		// Area da busca
+		JPanel panelBuscaAutor = new JPanel(new FlowLayout());
+		panelBuscaAutor.add(new JLabel("NOME/SOBRENOME: "));
+		txtFldBuscaAutor = new JTextField(17);
 		btnBuscaAutor = new JButton("Buscar");
-		panelBuscaEditora.add(txtFldBuscaAutor);
-		panelBuscaEditora.add(btnBuscaAutor);
-		add(panelBuscaEditora, BorderLayout.CENTER);
+		panelBuscaAutor.add(txtFldBuscaAutor);
+		panelBuscaAutor.add(btnBuscaAutor);
+		add(panelBuscaAutor, BorderLayout.CENTER);
 		
-		pack();
 	}
 	
 	public void setActionListenerBuscarAutor(ActionListener e) {

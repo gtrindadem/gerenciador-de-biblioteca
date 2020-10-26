@@ -11,8 +11,10 @@ public interface Dao {
 	
 	//Busca
 	public Collection<Livro> buscaLivro(String titulo);
+	public void cadastraLivro(String titulo, String isbn, int idEditora, float preco);
+	
 	public Map<Integer, Editora> buscaEditora(String nome);
-	public Collection<Autor> buscaAutorPorNome(String nome);
-	public Collection<Autor> buscaAutorPorSobrenome(String nome);
+	
+	public Collection<Autor> buscaAutor(String nome);
 	
 }

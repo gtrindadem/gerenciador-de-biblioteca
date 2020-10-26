@@ -1,12 +1,14 @@
 package view;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionListener;
 import java.util.Collection;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -14,7 +16,6 @@ import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
 import entity.Livro;
-import model.DaoMySql;
 
 public class JanelaBuscaLivro extends JFrame {
 	DefaultTableModel dtm;
@@ -28,21 +29,33 @@ public class JanelaBuscaLivro extends JFrame {
 
 	void initComponents() {
 		setLayout(new BorderLayout());
-		setBounds(765, 445, 400, 200);
+		setBounds(770, 450, 600, 280);
 		
-		dtm = new DefaultTableModel(new Object[] {"Título", "ISBN", "Editora", "Preço"}, 0);
+		//Area da tabela
+		dtm = new DefaultTableModel(new Object[] {"Título", "ISBN", "Editora", "Preço"}, 0) {
+			@Override
+			public boolean isCellEditable(int row, int column) {
+				return false;
+			}
+		};
 		JTable tabela = new JTable(dtm);
+		tabela.getColumnModel().getColumn(1).setMinWidth(100);
+		tabela.getColumnModel().getColumn(1).setMaxWidth(100);
+		tabela.getColumnModel().getColumn(2).setMaxWidth(55);
+		tabela.getColumnModel().getColumn(3).setMaxWidth(60);
 		JScrollPane scrollPane = new JScrollPane(tabela);
+		scrollPane.setPreferredSize(new Dimension(200, 200));
 		add(scrollPane, BorderLayout.PAGE_START);
 		
+		// Area da busca
 		JPanel panelBuscaLivro = new JPanel(new FlowLayout());
+		panelBuscaLivro.add(new JLabel("TÍTULO: "));
 		txtFldBuscaLivro = new JTextField(25);
 		btnBuscaLivro = new JButton("Buscar");
 		panelBuscaLivro.add(txtFldBuscaLivro);
 		panelBuscaLivro.add(btnBuscaLivro);
 		add(panelBuscaLivro, BorderLayout.CENTER);
 		
-		pack();
 	}
 	
 	public void setActionListenerBuscarLivro(ActionListener e) {

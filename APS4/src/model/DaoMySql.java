@@ -34,7 +34,7 @@ public class DaoMySql implements Dao {
 				livros.add(livro);
 			}
 		}catch(SQLException e) {
-			e.getMessage();
+			System.out.println(e.getMessage());
 		}
 		
 		return livros;
@@ -57,32 +57,22 @@ public class DaoMySql implements Dao {
 				editoras.put(editora.getId(), editora);
 			}
 		}catch(SQLException e) {
-			e.getMessage();
+			System.out.println(e.getMessage());
 		}
 		
 		return editoras;
 	}
 
 	@Override
-	public Collection<Autor> buscaAutorPorNome(String nome) {
-		String qBusca = "SELECT * FROM authors WHERE fname LIKE ?";
-		
-		return buscaAutor(qBusca, nome);
-	}
-
-	@Override
-	public Collection<Autor> buscaAutorPorSobrenome(String nome) {
-		String qBusca = "SELECT * FROM authors WHERE name LIKE ?";
-		
-		return buscaAutor(qBusca, nome);
-	}
-	
-	public Collection<Autor> buscaAutor(String qBusca, String nome) {
+	public Collection<Autor> buscaAutor(String nome) {
 		Collection<Autor> autores = new ArrayList<>();
+		
+		String qBusca = "SELECT * FROM authors WHERE fname LIKE ? OR name LIKE ?";
 		
 		try {
 			PreparedStatement pstm = connection.prepareStatement(qBusca);
 			pstm.setString(1, "%" + nome + "%");
+			pstm.setString(2, "%" + nome + "%");
 			ResultSet rs = pstm.executeQuery();
 			
 			Autor autor;
@@ -91,9 +81,25 @@ public class DaoMySql implements Dao {
 				autores.add(autor);
 			}
 		}catch(SQLException e) {
-			e.getMessage();
+			System.out.println(e.getMessage());
 		}
 		
 		return autores;
+	}
+
+	@Override
+	public void cadastraLivro(String titulo, String isbn, int idEditora, float preco) {
+		String qInsert = "INSERT books VALUES(?, ?, ?, ?)";
+		
+		try {
+			PreparedStatement pstm = connection.prepareStatement(qInsert);
+			pstm.setString(1, titulo);
+			pstm.setString(2, isbn);
+			pstm.setInt(3, idEditora);
+			pstm.setDouble(4, preco);
+			pstm.executeUpdate();
+		}catch(SQLException e) {
+			System.out.println(e.getMessage());
+		}
 	}
 }

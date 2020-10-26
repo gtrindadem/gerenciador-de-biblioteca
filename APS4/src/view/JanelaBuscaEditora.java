@@ -1,12 +1,15 @@
 package view;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionListener;
 import java.util.Map;
+import java.util.TreeMap;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -16,9 +19,13 @@ import javax.swing.table.DefaultTableModel;
 import entity.Editora;
 
 public class JanelaBuscaEditora extends JFrame{
-	JTextField txtFldBuscaEditora;
-	JButton btnBuscaEditora;
+	JTextField inputBuscaEditora;
+	JButton btnBuscaEditora = new JButton("Buscar");;
+	
 	DefaultTableModel dtm;
+	JTable tabela;
+	
+	Map<Integer, Editora> editorasRenumeradas;
 	
 	public JanelaBuscaEditora() {
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
@@ -26,39 +33,49 @@ public class JanelaBuscaEditora extends JFrame{
 	}
 	
 	private void initComponents() {
-		setBounds(765, 445, 400, 200);
-		
+		setBounds(765, 445, 400, 300);
 		setLayout(new BorderLayout());
 		
-		dtm = new DefaultTableModel(new Object[] {"ID", "Nome"}, 0);
-		JTable tabela = new JTable(dtm);
-		JScrollPane scrollPane = new JScrollPane(tabela);
+		// Area da tabela
+		this.dtm = new DefaultTableModel(new Object[] {"ID", "Nome"}, 0) {
+			@Override
+			public boolean isCellEditable(int row, int column) {
+				return false;
+			}
+		};
+		this.tabela = new JTable(dtm);
+		this.tabela.getColumnModel().getColumn(0).setMaxWidth(50);
+		JScrollPane scrollPane = new JScrollPane(this.tabela);
+		scrollPane.setPreferredSize(new Dimension(100, 200));
 		add(scrollPane, BorderLayout.PAGE_START);
 		
+		// Area de busca
 		JPanel panelBuscaEditora = new JPanel(new FlowLayout());
-		txtFldBuscaEditora = new JTextField(25);
-		btnBuscaEditora = new JButton("Buscar");
-		panelBuscaEditora.add(txtFldBuscaEditora);
-		panelBuscaEditora.add(btnBuscaEditora);
+		panelBuscaEditora.add(new JLabel("NOME: "));
+		this.inputBuscaEditora = new JTextField(15);
+		panelBuscaEditora.add(this.inputBuscaEditora);
+		panelBuscaEditora.add(this.btnBuscaEditora);
 		add(panelBuscaEditora, BorderLayout.CENTER);
-		
-		pack();
+
 	}
 	
-	public void setActionListenerBuscarEditora(ActionListener e) {
+	public void setActionListenerBuscaEditora(ActionListener e) {
 		btnBuscaEditora.addActionListener(e);
 	}
 	
 	public void mostraEditoras(Map<Integer, Editora> editoras) {
-		dtm.setNumRows(0);
+		this.editorasRenumeradas = new TreeMap<>();
+		int l = 0;
+		this.dtm.setNumRows(0);
 		for(int idEditora: editoras.keySet()) {
+			this.editorasRenumeradas.put(l++, editoras.get(idEditora));
 			Object[] linha = new Object[] {idEditora, editoras.get(idEditora).getName()};
-			dtm.addRow(linha);
+			this.dtm.addRow(linha);
 		}
 	}
 	
 	public String getNome() {
-		return txtFldBuscaEditora.getText();
+		return inputBuscaEditora.getText();
 	}
 	
 }
