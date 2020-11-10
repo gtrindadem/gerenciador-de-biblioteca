@@ -2,6 +2,7 @@ package controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Collection;
 
 import model.Dao;
 import view.View;
@@ -21,6 +22,7 @@ public class Controller {
 		view.setActionListenerBuscaEditora(new ActionBuscaEditora());
 		view.setActionListenerBuscaAutor(new ActionBuscaAutor());
 		view.setActionListenerCadastraLivro(new ActionCadastraLivro());
+		view.setActionListenerCadastraEditora(new ActionCadastraEditora());
 	}
 
 	class ActionBuscaLivro implements ActionListener{
@@ -58,8 +60,37 @@ public class Controller {
 			String isbn = view.getIsbnCadastraLivro();
 			int idEditora = view.getIdEditoraCadastraLivro();
 			float preco = view.getPrecoCadastraLivro();
+			Collection<Integer> idAutores = view.getIdAutoresCadastraLivro();
 			
-			dao.cadastraLivro(titulo, isbn, idEditora, preco);
+			try{
+				dao.cadastraLivro(titulo, isbn, idEditora, preco);
+				try {
+					dao.cadastraRelacaoLivrosAutores(isbn, idAutores);
+				}catch(Exception ex) {
+					throw new Exception(ex.getMessage());
+				}
+				view.msg("Livro cadastrado com sucesso!");
+			}catch(Exception ex) {
+				view.msg("Erro ao cadastrar livro: " + ex.getMessage());
+			}
+			
+		}
+		
+	}
+	
+	class ActionCadastraEditora implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			String nomeEditora = view.getNomeCadastraEditora();
+			String siteEditora = view.getSiteCadastraEditora();
+			
+			try {
+				dao.cadastraEditora(nomeEditora, siteEditora);
+				view.msg("Editora cadastrada com sucesso!");
+			}catch(Exception ex) {
+				view.msg(ex.getMessage());
+			}
 		}
 		
 	}

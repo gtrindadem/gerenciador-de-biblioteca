@@ -67,7 +67,7 @@ public class DaoMySql implements Dao {
 	public Collection<Autor> buscaAutor(String nome) {
 		Collection<Autor> autores = new ArrayList<>();
 		
-		String qBusca = "SELECT * FROM authors WHERE fname LIKE ? OR name LIKE ?";
+		String qBusca = "SELECT * FROM authors WHERE fname LIKE ? OR name LIKE ? ORDER BY fname";
 		
 		try {
 			PreparedStatement pstm = connection.prepareStatement(qBusca);
@@ -88,7 +88,7 @@ public class DaoMySql implements Dao {
 	}
 
 	@Override
-	public void cadastraLivro(String titulo, String isbn, int idEditora, float preco) {
+	public void cadastraLivro(String titulo, String isbn, int idEditora, float preco) throws Exception{
 		String qInsert = "INSERT books VALUES(?, ?, ?, ?)";
 		
 		try {
@@ -99,7 +99,44 @@ public class DaoMySql implements Dao {
 			pstm.setDouble(4, preco);
 			pstm.executeUpdate();
 		}catch(SQLException e) {
-			System.out.println(e.getMessage());
+			System.out.println("DAO Cadastra Livro: " + e.getMessage());
+			throw new Exception(e.getMessage());
+		}
+	}
+
+	@Override
+	public void cadastraRelacaoLivrosAutores(String isbn, Collection<Integer> idAutores) throws Exception {
+		String qInsert = "INSERT booksauthors VALUES(?, ?, ?)";
+		
+		try {
+			PreparedStatement pstm = connection.prepareStatement(qInsert);
+			pstm.setString(1, isbn);
+			int i = 1;
+			for(int idAutor: idAutores) {
+				pstm.setInt(2, idAutor);
+				pstm.setInt(3, i);
+				i++;
+				pstm.executeUpdate();
+			}
+		}catch(SQLException e) {
+			System.out.println("DAO Cadastra Relação Livro-Autor: " + e.getMessage());
+			throw new Exception(e.getMessage());
+		}
+	}
+
+	@Override
+	public void cadastraEditora(String nome, String site) throws Exception{
+		String qInsert = "INSERT publishers VALUES(0, ?, ?)";
+		
+		try {
+			PreparedStatement pstm = connection.prepareStatement(qInsert);
+			pstm.setString(1, nome);
+			pstm.setString(2, site);
+			pstm.executeUpdate();
+		}catch(SQLException e) {
+			e.printStackTrace();
+			System.out.println("DAO Cadastra Editora: " + e.getMessage());
+			throw new Exception(e.getMessage());
 		}
 	}
 }

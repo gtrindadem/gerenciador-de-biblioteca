@@ -1,5 +1,6 @@
 package view;
 
+import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
@@ -8,6 +9,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+import java.util.ArrayList;
+import java.util.Collection;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -20,6 +25,8 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
+import view.JanelaBuscaEditora.LimpaTela;
+
 public class JanelaCadastraLivro extends JFrame {
 	
 	JTextField inputTitulo;
@@ -31,19 +38,29 @@ public class JanelaCadastraLivro extends JFrame {
 	JTextField inputNomeEditora;
 	
 	JanelaBuscaAutor janelaBuscaAutor;
+	JTable tabelaAutores;
 	DefaultTableModel dtmTabelaAutores;
+	
+	JanelaSelecaoDeAutores janelaSelecaoAutores;
+	DefaultTableModel dtmSelecaoAutores;
 	
 	JButton btnCadastrar;
 	ActionListener actionCadastrarLivro;
 	
-	public JanelaCadastraLivro() {
+	public JanelaCadastraLivro(DefaultTableModel dtm) {
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+		
+		dtmSelecaoAutores = dtm;
+		janelaSelecaoAutores = new JanelaSelecaoDeAutores();
+		
 		initComponents();
 	}
 
 	private void initComponents() {
+		setTitle("Cadastro de Livro");
 		setLocation(765, 445);
 		setLayout(new BoxLayout(getContentPane(), BoxLayout.PAGE_AXIS));
+		addWindowListener(new eventFecharJanela());
 		
 		JPanel panelCadastro = new JPanel();
         panelCadastro.setLayout(new GridBagLayout());
@@ -88,7 +105,7 @@ public class JanelaCadastraLivro extends JFrame {
         inputNomeEditora = new JTextField(12);
         inputNomeEditora.setEditable(false);
         JButton btnBuscaEditora = new JButton("Listar Editoras");
-        btnBuscaEditora.addActionListener(new ActionBuscaEditora());
+        btnBuscaEditora.addActionListener(new ActionBtnListarEditoras());
         panelInputEditora.add(inputIdEditora);
         panelInputEditora.add(inputNomeEditora);
         panelInputEditora.add(btnBuscaEditora);
@@ -107,7 +124,7 @@ public class JanelaCadastraLivro extends JFrame {
 				return false;
 			}
 		};
-		JTable tabelaAutores = new JTable(dtmTabelaAutores);
+		tabelaAutores = new JTable(dtmTabelaAutores);
 		tabelaAutores.getColumnModel().getColumn(0).setMaxWidth(100);
 		tabelaAutores.getColumnModel().getColumn(1).setMaxWidth(100);
 		tabelaAutores.getColumnModel().getColumn(2).setMaxWidth(100);
@@ -119,7 +136,7 @@ public class JanelaCadastraLivro extends JFrame {
         c.gridy = 6;
         c.anchor = GridBagConstraints.CENTER;
         JButton selectAutores = new JButton("Selecionar Autores");
-        selectAutores.addActionListener(new ActionBuscaAutores());
+        selectAutores.addActionListener(new ActionBtnSelecionarAutores());
         panelCadastro.add(selectAutores, c);
 		
         add(panelCadastro);
@@ -138,7 +155,7 @@ public class JanelaCadastraLivro extends JFrame {
 		actionCadastrarLivro = e;
 	}
 	
-	class ActionBuscaEditora implements ActionListener {
+	class ActionBtnListarEditoras implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -185,29 +202,52 @@ public class JanelaCadastraLivro extends JFrame {
 		
 	}
 	
-	class ActionBuscaAutores implements ActionListener{
+	class JanelaSelecaoDeAutores extends JFrame{
+		JTable tabela;
+		DefaultTableModel dtm;
+		
+		public JanelaSelecaoDeAutores(){
+			setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+			
+			dtm = dtmSelecaoAutores;
+			
+			initComponents();
+		}
+		
+		public void initComponents() {
+			setBounds(765, 445, 420, 235);
+			tabela = new JTable(dtm);
+			tabela.getColumnModel().getColumn(0).setMaxWidth(50);
+			JScrollPane scrollPane = new JScrollPane(tabela);
+			scrollPane.setPreferredSize(new Dimension(200,150));
+			
+			add(scrollPane);
+		}
+	}
+	
+	class ActionBtnSelecionarAutores implements ActionListener{
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			janelaBuscaAutor.setVisible(true);
-			janelaBuscaAutor.setLocation(1165, 445);
-			janelaBuscaAutor.tabela.addMouseListener(new MouseListenerTabelaAutores());
+			janelaSelecaoAutores.setLocation(1165, 445);
+			janelaSelecaoAutores.tabela.addMouseListener(new MouseListenerTabelaSelecionaAutores());
+			janelaSelecaoAutores.setVisible(true);
 		}
 		
 	}
 	
-	class MouseListenerTabelaAutores implements MouseListener{
+	class MouseListenerTabelaSelecionaAutores implements MouseListener{
 
 		@Override
 		public void mouseClicked(MouseEvent e) {
 			if(e.getClickCount() == 2) {
-				int linhaSelecionada = janelaBuscaAutor.tabela.getSelectedRow();
+				int linhaSelecionada = janelaSelecaoAutores.tabela.getSelectedRow();
 				
-				String id = janelaBuscaAutor.tabela.getValueAt(linhaSelecionada, 0).toString();
-				String nome = janelaBuscaAutor.tabela.getValueAt(linhaSelecionada, 1).toString();
-				String sobrenome = janelaBuscaAutor.tabela.getValueAt(linhaSelecionada, 2).toString();
+				String id = janelaSelecaoAutores.tabela.getValueAt(linhaSelecionada, 0).toString();
+				String nome = janelaSelecaoAutores.tabela.getValueAt(linhaSelecionada, 1).toString();
+				String sobrenome = janelaSelecaoAutores.tabela.getValueAt(linhaSelecionada, 2).toString();
 				
-				janelaBuscaAutor.dtm.removeRow(linhaSelecionada);
+				janelaSelecaoAutores.dtm.removeRow(linhaSelecionada);
 				
 				dtmTabelaAutores.addRow(new Object[] {id, nome, sobrenome});
 			}
@@ -243,15 +283,21 @@ public class JanelaCadastraLivro extends JFrame {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			//Validação de entrada de dados do form
 			String msg = "";
-			if(inputTitulo.getText().trim().equals("")) {
+			String iptTitulo = inputTitulo.getText().trim();
+			String iptIsbn = inputIsbn.getText().trim();
+;			if(iptTitulo.equals("")) {
 				msg += " Título não preenchido;";
 			}
-			if(inputIsbn.getText().trim().equals("")) {
+			if(iptTitulo.length() > 60) {
+				msg += " Título não pode ter mais que 60 caracteres;";
+			}
+			if(iptIsbn.equals("")) {
 				msg += " ISBN não preenchido;";
 			}
-			if(inputIdEditora.getText().trim().equals("")) {
-				msg += " Editora não selecionada;";
+			if(iptIsbn.length() > 13) {
+				msg += " ISBN não pode ter mais que 13 caracteres;";
 			}
 			try {
 				Float.parseFloat(inputPreco.getText().trim());
@@ -259,8 +305,14 @@ public class JanelaCadastraLivro extends JFrame {
 				if(inputPreco.getText().trim().equals("")) {
 					msg += " Preco não preenchido;";
 				}else {
-					msg += " Preco inválido";
+					msg += " Preco inválido (Utilize apenas \".\")";
 				}
+			}
+			if(inputIdEditora.getText().trim().equals("")) {
+				msg += " Editora não selecionada;";
+			}
+			if(tabelaAutores.getRowCount() == 0) {
+				msg += " Cadastre pelo menos 1 autor;";
 			}
 			
 			
@@ -270,10 +322,14 @@ public class JanelaCadastraLivro extends JFrame {
 				JOptionPane.showMessageDialog(null, "Erro ao cadastrar livro:" + msg,
 						"Erro ao cadastrar", JOptionPane.ERROR_MESSAGE);
 			}
+			dispose();
+			janelaSelecaoAutores.dispose();
+			LimparDados();
 		}
 		
 	}
 	
+	//getters do form
 	public String getTitulo() {
 		return inputTitulo.getText();
 	}
@@ -288,6 +344,71 @@ public class JanelaCadastraLivro extends JFrame {
 	
 	public float getPreco() {
 		return Float.parseFloat(inputPreco.getText());
+	}
+	
+	public Collection<Integer> getIdAutores() {
+		ArrayList<Integer> idAutores = new ArrayList<>();
+		for(int i = 0; i < dtmTabelaAutores.getRowCount(); i++) {
+			idAutores.add(Integer.parseInt(tabelaAutores.getValueAt(i, 0).toString()));
+		}
+		
+		return idAutores;
+	}
+	
+	public void LimparDados() {
+		inputTitulo.setText("");
+		inputIsbn.setText("");
+		inputPreco.setText("");
+		inputIdEditora.setText("");
+		inputNomeEditora.setText("");
+
+		dtmTabelaAutores.setNumRows(0);
+		dtmSelecaoAutores.setNumRows(0);
+	}
+	
+	class eventFecharJanela implements WindowListener{
+
+		@Override
+		public void windowOpened(WindowEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void windowClosing(WindowEvent e) {
+			LimparDados();
+		}
+
+		@Override
+		public void windowClosed(WindowEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void windowIconified(WindowEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void windowDeiconified(WindowEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void windowActivated(WindowEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void windowDeactivated(WindowEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+		
 	}
 	
 }

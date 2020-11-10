@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.util.Collection;
 
 import javax.swing.JButton;
@@ -16,11 +18,14 @@ import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
 import entity.Livro;
+import view.JanelaCadastraLivro.eventFecharJanela;
 
 public class JanelaBuscaLivro extends JFrame {
 	DefaultTableModel dtm;
 	JButton btnBuscaLivro;
 	JTextField txtFldBuscaLivro;
+	
+	ActionListener actionBuscarLivro;
 	
 	public JanelaBuscaLivro() {
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
@@ -28,8 +33,10 @@ public class JanelaBuscaLivro extends JFrame {
 	}
 
 	void initComponents() {
+		setTitle("Consultar Livros");
 		setLayout(new BorderLayout());
 		setBounds(770, 450, 600, 280);
+		addWindowListener(new eventFecharJanela());
 		
 		//Area da tabela
 		dtm = new DefaultTableModel(new Object[] {"Título", "ISBN", "Editora", "Preço"}, 0) {
@@ -59,7 +66,8 @@ public class JanelaBuscaLivro extends JFrame {
 	}
 	
 	public void setActionListenerBuscarLivro(ActionListener e) {
-		btnBuscaLivro.addActionListener(e);
+		actionBuscarLivro = e;
+		btnBuscaLivro.addActionListener(actionBuscarLivro);
 	}
 	
 	public void mostraLivros(Collection<Livro> livros) {
@@ -72,5 +80,50 @@ public class JanelaBuscaLivro extends JFrame {
 	
 	public String getTitulo() {
 		return txtFldBuscaLivro.getText();
+	}
+	
+	class eventFecharJanela implements WindowListener{
+
+		@Override
+		public void windowOpened(WindowEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void windowClosing(WindowEvent e) {
+			txtFldBuscaLivro.setText("");
+		}
+
+		@Override
+		public void windowClosed(WindowEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void windowIconified(WindowEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void windowDeiconified(WindowEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void windowActivated(WindowEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void windowDeactivated(WindowEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+		
 	}
 }
