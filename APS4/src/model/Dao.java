@@ -16,6 +16,7 @@ public interface Dao {
 	
 	//Autor
 	public Collection<Autor> buscaAutor(String nome);
+	public void cadastraAutor(String nome, String sobrenome) throws Exception;
 	
 	//Editora
 	public Map<Integer, Editora> buscaEditora(String nome);

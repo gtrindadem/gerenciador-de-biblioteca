@@ -23,7 +23,8 @@ public class JanelaHome extends JFrame implements View {
 	JanelaBuscaEditora janelaBuscaEditora;
 	JanelaCadastraEditora janelaCadastraEditora;
 	
-	JanelaBuscaAutor janelaBuscaAutor;	
+	JanelaBuscaAutor janelaBuscaAutor;
+	JanelaCadastraAutor janelaCadastraAutor;
 	
 	public JanelaHome() {
 		janelaBuscaLivro = new JanelaBuscaLivro();
@@ -32,6 +33,7 @@ public class JanelaHome extends JFrame implements View {
 		
 		janelaCadastraLivro = new JanelaCadastraLivro(janelaBuscaAutor.dtm);
 		janelaCadastraEditora = new JanelaCadastraEditora();
+		janelaCadastraAutor = new JanelaCadastraAutor();
 		
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		initComponents();
@@ -70,6 +72,10 @@ public class JanelaHome extends JFrame implements View {
 		JMenuItem menuItemCadastrarEditora = new JMenuItem("Cadastrar Editora");
 		menuCadastro.add(menuItemCadastrarEditora);
 		menuItemCadastrarEditora.addActionListener(new AbrirCadastrarEditora());
+		
+		JMenuItem menuItemCadastrarAutor = new JMenuItem("Cadastrar Autor");
+		menuCadastro.add(menuItemCadastrarAutor);
+		menuItemCadastrarAutor.addActionListener(new AbrirCadastrarAutor());
 		
 		setVisible(true);
 	}
@@ -196,7 +202,7 @@ public class JanelaHome extends JFrame implements View {
 	
 	
 	
-	// Autor
+	// Autor - Busca
 	class AbrirBuscaAutor implements ActionListener{
 
 		@Override
@@ -226,5 +232,26 @@ public class JanelaHome extends JFrame implements View {
 	public void msg(String msg) {
 		JOptionPane.showMessageDialog(null, msg);
 	}
+	
+	//Autor - Cadastro
+	class AbrirCadastrarAutor implements ActionListener{
 
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			janelaCadastraAutor.setVisible(true);
+		}
+		
+	}
+	public void setActionListenerCadastraAutor(ActionListener e) {
+		janelaCadastraAutor.setActionListenerCadastraAutor(e);
+	}
+	public String getNomeCadastraAutor() {
+		return janelaCadastraAutor.getNomeAutor();
+	}
+	public String getSobrenomeCadastraAutor() {
+		return janelaCadastraAutor.getSobrenomeAutor();
+	}
+	
+	
+	
 }

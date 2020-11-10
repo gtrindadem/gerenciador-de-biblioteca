@@ -139,4 +139,20 @@ public class DaoMySql implements Dao {
 			throw new Exception(e.getMessage());
 		}
 	}
+
+	@Override
+	public void cadastraAutor(String nome, String sobrenome) throws Exception{
+		String qInsert = "INSERT authors VALUES(0, ?, ?)";
+		
+		try {
+			PreparedStatement pstm = connection.prepareStatement(qInsert);
+			pstm.setString(1, sobrenome);
+			pstm.setString(2, nome);
+			pstm.executeUpdate();
+		}catch(SQLException e) {
+			e.printStackTrace();
+			System.out.println("DAO Cadastra Autor: " + e.getMessage());
+			throw new Exception(e.getMessage());
+		}
+	}
 }

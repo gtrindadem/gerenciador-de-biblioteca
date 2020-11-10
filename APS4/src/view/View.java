@@ -36,5 +36,9 @@ public interface View {
 	public String getNomeAutor();
 	public void listaAutores(Collection<Autor> autores);
 	
+	public void setActionListenerCadastraAutor(ActionListener e);
+	public String getNomeCadastraAutor();
+	public String getSobrenomeCadastraAutor();
+	
 	public void msg(String msg);
 }

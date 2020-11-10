@@ -23,6 +23,7 @@ public class Controller {
 		view.setActionListenerBuscaAutor(new ActionBuscaAutor());
 		view.setActionListenerCadastraLivro(new ActionCadastraLivro());
 		view.setActionListenerCadastraEditora(new ActionCadastraEditora());
+		view.setActionListenerCadastraAutor(new ActionCadastraAutor());
 	}
 
 	class ActionBuscaLivro implements ActionListener{
@@ -88,6 +89,23 @@ public class Controller {
 			try {
 				dao.cadastraEditora(nomeEditora, siteEditora);
 				view.msg("Editora cadastrada com sucesso!");
+			}catch(Exception ex) {
+				view.msg(ex.getMessage());
+			}
+		}
+		
+	}
+	
+	class ActionCadastraAutor implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			String nomeAutor = view.getNomeCadastraAutor();
+			String sobrenomeAutor = view.getSobrenomeCadastraAutor();
+			
+			try {
+				dao.cadastraAutor(nomeAutor, sobrenomeAutor);
+				view.msg("Autor cadaastrado com sucesso!");
 			}catch(Exception ex) {
 				view.msg(ex.getMessage());
 			}
