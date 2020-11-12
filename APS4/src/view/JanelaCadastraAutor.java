@@ -19,12 +19,12 @@ import javax.swing.JTextField;
 import view.JanelaCadastraEditora.ActionBtnCadastrarEditora;
 
 public class JanelaCadastraAutor extends JFrame {
+	ActionListener actionCadastrarAutor;
+	
 	JTextField iptNomeAutor;
 	JTextField iptSobrenomeAutor;
 	
 	JButton btnCadastrarAutor;
-	
-	ActionListener actionCadastrarAutor;
 	
 	public JanelaCadastraAutor() {
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
@@ -33,7 +33,8 @@ public class JanelaCadastraAutor extends JFrame {
 	
 	public void initComponents() {
 		setTitle("Cadastro de Autor");
-		setBounds(765, 445, 400, 170);
+		setSize(400, 170);
+		setLocationRelativeTo(null);
 		setLayout(new BoxLayout(getContentPane(), BoxLayout.PAGE_AXIS));
 		
 		//Label Titulo
@@ -74,7 +75,7 @@ public class JanelaCadastraAutor extends JFrame {
         add(panelBtnCadastrar);
 	}
 	
-	public void setActionListenerCadastraAutor(ActionListener e) {
+	public void setActionListenerCadastrarAutor(ActionListener e) {
 		actionCadastrarAutor = e;
 	}
 	
@@ -111,11 +112,11 @@ public class JanelaCadastraAutor extends JFrame {
 	
 	//Getters do form
 	public String getNomeAutor() {
-		return iptNomeAutor.getText();
+		return iptNomeAutor.getText().trim();
 	}
 	
 	public String getSobrenomeAutor() {
-		return iptSobrenomeAutor.getText();
+		return iptSobrenomeAutor.getText().trim();
 	}
 	
 	public void limparDados() {

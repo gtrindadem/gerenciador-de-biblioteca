@@ -25,99 +25,98 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
-import view.JanelaBuscaEditora.LimpaTela;
-
 public class JanelaCadastraLivro extends JFrame {
+	JTextField iptTitulo;
+	JTextField iptIsbn;
+	JTextField iptPreco;
+	JTextField iptIdEditora;
+	JTextField iptNomeEditora;
 	
-	JTextField inputTitulo;
-	JTextField inputIsbn;
-	JTextField inputPreco;
+	JanelaEditora janelaBuscaEditora;
+	MouseListener mouseListenerTabelaEditoras;
+
+	JButton selectAutores;
+	JanelaAutor janelaBuscaAutor;
+	MouseListener mouseListenerTabelaAutor;
 	
-	JanelaBuscaEditora janelaBuscaEditora;
-	JTextField inputIdEditora;
-	JTextField inputNomeEditora;
-	
-	JanelaBuscaAutor janelaBuscaAutor;
 	JTable tabelaAutores;
 	DefaultTableModel dtmTabelaAutores;
-	
-	JanelaSelecaoDeAutores janelaSelecaoAutores;
-	DefaultTableModel dtmSelecaoAutores;
 	
 	JButton btnCadastrar;
 	ActionListener actionCadastrarLivro;
 	
-	public JanelaCadastraLivro(DefaultTableModel dtm) {
+	public JanelaCadastraLivro() {
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-		
-		dtmSelecaoAutores = dtm;
-		janelaSelecaoAutores = new JanelaSelecaoDeAutores();
-		
 		initComponents();
 	}
 
 	private void initComponents() {
 		setTitle("Cadastro de Livro");
-		setLocation(765, 445);
+		setSize(450, 350);
+		setLocationRelativeTo(null);
 		setLayout(new BoxLayout(getContentPane(), BoxLayout.PAGE_AXIS));
 		addWindowListener(new eventFecharJanela());
 		
-		JPanel panelCadastro = new JPanel();
-        panelCadastro.setLayout(new GridBagLayout());
+		//Label Titulo
+		JPanel panelTitulo = new JPanel(new FlowLayout(FlowLayout.LEADING));
+		panelTitulo.add(new JLabel("CADASTRO DE LIVRO"));
+		
+		//Form
+		JPanel panelForm = new JPanel();
+        panelForm.setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
         c.gridx = 0;
+        c.gridy = 0;
+        c.anchor = GridBagConstraints.LINE_END;
+        panelForm.add(new JLabel("TÍTULO: "), c);
+        c.gridx = 1;
+        c.gridy = 0;
+        c.anchor = GridBagConstraints.LINE_START;
+        iptTitulo = new JTextField(20);
+        panelForm.add(iptTitulo, c);
+        c.gridx = 0;
         c.gridy = 1;
         c.anchor = GridBagConstraints.LINE_END;
-        panelCadastro.add(new JLabel("TÍTULO: "), c);
+        panelForm.add(new JLabel("ISBN: "), c);
         c.gridx = 1;
         c.gridy = 1;
         c.anchor = GridBagConstraints.LINE_START;
-        inputTitulo = new JTextField(20);
-        panelCadastro.add(inputTitulo, c);
+        iptIsbn = new JTextField(10);
+        panelForm.add(iptIsbn, c);
         c.gridx = 0;
         c.gridy = 2;
         c.anchor = GridBagConstraints.LINE_END;
-        panelCadastro.add(new JLabel("ISBN: "), c);
+        panelForm.add(new JLabel("PREÇO: "), c);
         c.gridx = 1;
         c.gridy = 2;
         c.anchor = GridBagConstraints.LINE_START;
-        inputIsbn = new JTextField(5);
-        panelCadastro.add(inputIsbn, c);
+        iptPreco = new JTextField(5);
+        panelForm.add(iptPreco, c);
         c.gridx = 0;
         c.gridy = 3;
         c.anchor = GridBagConstraints.LINE_END;
-        panelCadastro.add(new JLabel("PREÇO: "), c);
+        panelForm.add(new JLabel("EDITORA: "), c);
         c.gridx = 1;
         c.gridy = 3;
-        c.anchor = GridBagConstraints.LINE_START;
-        inputPreco = new JTextField(7);
-        panelCadastro.add(inputPreco, c);
-        c.gridx = 0;
-        c.gridy = 4;
-        c.anchor = GridBagConstraints.LINE_END;
-        panelCadastro.add(new JLabel("EDITORA:"), c);
-        c.gridx = 1;
-        c.gridy = 4;
         c.anchor = GridBagConstraints.LINE_START;
         JPanel panelInputEditora = new JPanel(new FlowLayout());
-        inputIdEditora = new JTextField(3);
-        inputIdEditora.setEditable(false);
-        inputNomeEditora = new JTextField(12);
-        inputNomeEditora.setEditable(false);
+        iptIdEditora = new JTextField(3);
+        iptIdEditora.setEditable(false);
+        iptNomeEditora = new JTextField(12);
+        iptNomeEditora.setEditable(false);
         JButton btnBuscaEditora = new JButton("Listar Editoras");
         btnBuscaEditora.addActionListener(new ActionBtnListarEditoras());
-        panelInputEditora.add(inputIdEditora);
-        panelInputEditora.add(inputNomeEditora);
+        panelInputEditora.add(iptIdEditora);
+        panelInputEditora.add(iptNomeEditora);
         panelInputEditora.add(btnBuscaEditora);
-        panelCadastro.add(panelInputEditora, c);
+        panelForm.add(panelInputEditora, c);
         c.gridx = 0;
-        c.gridy = 5;
+        c.gridy = 4;
         c.anchor = GridBagConstraints.LINE_END;
-        panelCadastro.add(new JLabel("AUTOR(ES):"), c);
+        panelForm.add(new JLabel("AUTOR(ES): "), c);
         c.gridx = 1;
-        c.gridy = 5;
-        c.anchor = GridBagConstraints.LINE_START;
-        JPanel panelInputAutores = new JPanel(new FlowLayout());
+        c.gridy = 4;
+        c.anchor = GridBagConstraints.CENTER;
         dtmTabelaAutores = new DefaultTableModel(new Object[] {"ID", "Nome", "Sobrenome"}, 0) {
 			@Override
 			public boolean isCellEditable(int row, int column) {
@@ -125,43 +124,43 @@ public class JanelaCadastraLivro extends JFrame {
 			}
 		};
 		tabelaAutores = new JTable(dtmTabelaAutores);
-		tabelaAutores.getColumnModel().getColumn(0).setMaxWidth(100);
-		tabelaAutores.getColumnModel().getColumn(1).setMaxWidth(100);
-		tabelaAutores.getColumnModel().getColumn(2).setMaxWidth(100);
+        tabelaAutores.getColumnModel().getColumn(0).setMaxWidth(50);
+		tabelaAutores.addMouseListener(new MouseListenerTabelaAutores());
 		JScrollPane scrollPane = new JScrollPane(tabelaAutores);
 		scrollPane.setPreferredSize(new Dimension(300,100));
-		panelInputAutores.add(scrollPane);
-		panelCadastro.add(panelInputAutores, c);
+		panelForm.add(scrollPane, c);
 		c.gridx = 1;
-        c.gridy = 6;
-        c.anchor = GridBagConstraints.CENTER;
-        JButton selectAutores = new JButton("Selecionar Autores");
+        c.gridy = 5;
+        selectAutores = new JButton("Selecionar Autores");
         selectAutores.addActionListener(new ActionBtnSelecionarAutores());
-        panelCadastro.add(selectAutores, c);
+        panelForm.add(selectAutores, c);
 		
-        add(panelCadastro);
-        
         JPanel panelBtnCadastrar = new JPanel(new FlowLayout(FlowLayout.TRAILING));
         btnCadastrar = new JButton("Cadastrar Livro");
         btnCadastrar.addActionListener(new ActionBtnCadastrar());
         
         panelBtnCadastrar.add(btnCadastrar);
-        add(panelBtnCadastrar);
         
-        pack();
+        add(panelTitulo);
+        add(panelForm);
+        add(panelBtnCadastrar);
 	}
 	
-	public void setActionListenerCadastraLivro(ActionListener e) {
+	public void setActionListenerCadastrarLivro(ActionListener e) {
 		actionCadastrarLivro = e;
 	}
 	
 	class ActionBtnListarEditoras implements ActionListener {
-
+		
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			janelaBuscaEditora.LimparDados();
+			janelaBuscaEditora.actionBuscarEditora.actionPerformed(e);
+			janelaBuscaEditora.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 			janelaBuscaEditora.setVisible(true);
-			janelaBuscaEditora.setLocation(1065, 445);
-			janelaBuscaEditora.tabela.addMouseListener(new MouseListenerTabelaEditoras());
+			
+			mouseListenerTabelaEditoras = new MouseListenerTabelaEditoras();
+			janelaBuscaEditora.tabela.addMouseListener(mouseListenerTabelaEditoras);
 		}
 		
 	}
@@ -171,12 +170,18 @@ public class JanelaCadastraLivro extends JFrame {
 		@Override
 		public void mouseClicked(MouseEvent e) {
 			if(e.getClickCount() == 2) {
-				int linha = janelaBuscaEditora.tabela.getSelectedRow();
-				String idEditora = Integer.toString(janelaBuscaEditora.editorasRenumeradas.get(linha).getId());
-				String nomeEditora = janelaBuscaEditora.editorasRenumeradas.get(linha).getName();
-				inputIdEditora.setText(idEditora);
-				inputNomeEditora.setText(nomeEditora);
+				int linhaSelecionada = janelaBuscaEditora.tabela.getSelectedRow();
+				
+				String idEditora = janelaBuscaEditora.tabela.getValueAt(linhaSelecionada, 0).toString();
+				String nomeEditora = janelaBuscaEditora.tabela.getValueAt(linhaSelecionada, 1).toString();
+				
+				iptIdEditora.setText(idEditora);
+				iptNomeEditora.setText(nomeEditora);
+				
+				janelaBuscaEditora.tabela.removeMouseListener(mouseListenerTabelaEditoras);
 				janelaBuscaEditora.dispose();
+				janelaBuscaEditora.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+				janelaBuscaEditora.setBounds(765, 445, 400, 300);
 			}
 		}
 
@@ -202,54 +207,107 @@ public class JanelaCadastraLivro extends JFrame {
 		
 	}
 	
-	class JanelaSelecaoDeAutores extends JFrame{
-		JTable tabela;
-		DefaultTableModel dtm;
-		
-		public JanelaSelecaoDeAutores(){
-			setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-			
-			dtm = dtmSelecaoAutores;
-			
-			initComponents();
-		}
-		
-		public void initComponents() {
-			setBounds(765, 445, 420, 235);
-			tabela = new JTable(dtm);
-			tabela.getColumnModel().getColumn(0).setMaxWidth(50);
-			JScrollPane scrollPane = new JScrollPane(tabela);
-			scrollPane.setPreferredSize(new Dimension(200,150));
-			
-			add(scrollPane);
-		}
-	}
-	
 	class ActionBtnSelecionarAutores implements ActionListener{
-
+		JPanel panelBtnOk;
+		
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			janelaSelecaoAutores.setLocation(1165, 445);
-			janelaSelecaoAutores.tabela.addMouseListener(new MouseListenerTabelaSelecionaAutores());
-			janelaSelecaoAutores.setVisible(true);
+			janelaBuscaAutor.LimparDados();
+			janelaBuscaAutor.actionBuscarAutor.actionPerformed(e);
+			janelaBuscaAutor.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+			janelaBuscaAutor.setVisible(true);
+			
+			panelBtnOk = new JPanel(new FlowLayout(FlowLayout.CENTER));
+			JButton btnOk = new JButton("OK");
+			btnOk.addActionListener(new ActionBtnOk());
+			panelBtnOk.add(btnOk);
+			
+			janelaBuscaAutor.add(panelBtnOk);
+			
+			mouseListenerTabelaAutor = new MouseListenerTabelaAutor();
+			janelaBuscaAutor.tabela.addMouseListener(mouseListenerTabelaAutor);
+		}
+	
+		class ActionBtnOk implements ActionListener {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				janelaBuscaAutor.dispose();
+				janelaBuscaAutor.remove(panelBtnOk);
+				janelaBuscaAutor.tabela.removeMouseListener(mouseListenerTabelaAutor);
+				janelaBuscaAutor.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+			}
+			
 		}
 		
 	}
 	
-	class MouseListenerTabelaSelecionaAutores implements MouseListener{
+	class MouseListenerTabelaAutor implements MouseListener{
 
 		@Override
 		public void mouseClicked(MouseEvent e) {
 			if(e.getClickCount() == 2) {
-				int linhaSelecionada = janelaSelecaoAutores.tabela.getSelectedRow();
+				int linhaSelecionada = janelaBuscaAutor.tabela.getSelectedRow();
 				
-				String id = janelaSelecaoAutores.tabela.getValueAt(linhaSelecionada, 0).toString();
-				String nome = janelaSelecaoAutores.tabela.getValueAt(linhaSelecionada, 1).toString();
-				String sobrenome = janelaSelecaoAutores.tabela.getValueAt(linhaSelecionada, 2).toString();
+				String id = janelaBuscaAutor.tabela.getValueAt(linhaSelecionada, 0).toString();
+				String nome = janelaBuscaAutor.tabela.getValueAt(linhaSelecionada, 1).toString();
+				String sobrenome = janelaBuscaAutor.tabela.getValueAt(linhaSelecionada, 2).toString();
 				
-				janelaSelecaoAutores.dtm.removeRow(linhaSelecionada);
+				boolean linhaNova = true;
+				for(int i=0; i < dtmTabelaAutores.getRowCount(); i++){
+					if(id.equals(dtmTabelaAutores.getValueAt(i, 0).toString())) {
+						linhaNova = false;
+					}
+				}
 				
-				dtmTabelaAutores.addRow(new Object[] {id, nome, sobrenome});
+				janelaBuscaAutor.dtm.removeRow(linhaSelecionada);
+				
+				if(linhaNova) {
+					dtmTabelaAutores.addRow(new Object[] {id, nome, sobrenome});
+				}
+			}
+		}
+
+		@Override
+		public void mousePressed(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseEntered(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseExited(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+		
+	}
+	
+	class MouseListenerTabelaAutores implements MouseListener {
+
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			if(e.getClickCount() == 2) {
+				int linhaSelecionada = tabelaAutores.getSelectedRow();
+				
+				String id = tabelaAutores.getValueAt(linhaSelecionada, 0).toString();
+				String nome = tabelaAutores.getValueAt(linhaSelecionada, 1).toString();
+				String sobrenome = tabelaAutores.getValueAt(linhaSelecionada, 2).toString();
+				
+				dtmTabelaAutores.removeRow(linhaSelecionada);
+				
+				janelaBuscaAutor.dtm.insertRow(0, new Object[] {id, nome, sobrenome});
 			}
 		}
 
@@ -285,65 +343,65 @@ public class JanelaCadastraLivro extends JFrame {
 		public void actionPerformed(ActionEvent e) {
 			//Validação de entrada de dados do form
 			String msg = "";
-			String iptTitulo = inputTitulo.getText().trim();
-			String iptIsbn = inputIsbn.getText().trim();
-;			if(iptTitulo.equals("")) {
-				msg += " Título não preenchido;";
+			String inputTitulo = iptTitulo.getText().trim();
+			String inputIsbn = iptIsbn.getText().trim();
+			if(inputTitulo.equals("")) {
+				msg += " Campo TÍTULO não preenchido;";
 			}
-			if(iptTitulo.length() > 60) {
-				msg += " Título não pode ter mais que 60 caracteres;";
+			if(inputTitulo.length() > 60) {
+				msg += " TÍTULO não pode ter mais que 60 caracteres;";
 			}
-			if(iptIsbn.equals("")) {
-				msg += " ISBN não preenchido;";
+			if(inputIsbn.equals("")) {
+				msg += " Campo ISBN não preenchido;";
 			}
-			if(iptIsbn.length() > 13) {
+			if(inputIsbn.length() > 13) {
 				msg += " ISBN não pode ter mais que 13 caracteres;";
 			}
 			try {
-				Float.parseFloat(inputPreco.getText().trim());
+				Float.parseFloat(iptPreco.getText().trim());
 			}catch(NumberFormatException error) {
-				if(inputPreco.getText().trim().equals("")) {
-					msg += " Preco não preenchido;";
+				if(iptPreco.getText().trim().equals("")) {
+					msg += " PREÇO não preenchido;";
 				}else {
-					msg += " Preco inválido (Utilize apenas \".\")";
+					msg += " PREÇO inválido (Utilize apenas \".\")";
 				}
 			}
-			if(inputIdEditora.getText().trim().equals("")) {
-				msg += " Editora não selecionada;";
+			if(iptIdEditora.getText().trim().equals("")) {
+				msg += " EDITORA não selecionada;";
 			}
 			if(tabelaAutores.getRowCount() == 0) {
-				msg += " Cadastre pelo menos 1 autor;";
+				msg += " Selecione pelo menos 1 AUTOR;";
 			}
 			
 			
 			if(msg.equals("")) {
 				actionCadastrarLivro.actionPerformed(e);
+				dispose();
+				LimparDados();
 			}else {
 				JOptionPane.showMessageDialog(null, "Erro ao cadastrar livro:" + msg,
 						"Erro ao cadastrar", JOptionPane.ERROR_MESSAGE);
 			}
-			dispose();
-			janelaSelecaoAutores.dispose();
-			LimparDados();
 		}
 		
 	}
 	
-	//getters do form
+	//Getters do form
 	public String getTitulo() {
-		return inputTitulo.getText();
+		return iptTitulo.getText().trim();
 	}
 	
 	public String getIsbn() {
-		return inputIsbn.getText();
+		return iptIsbn.getText().trim();
 	}
 	
 	public int getIdEditora() {
-		return Integer.parseInt(inputIdEditora.getText());
+		System.out.println("a:" + iptIdEditora.getText());
+		return Integer.parseInt(iptIdEditora.getText());
 	}
 	
 	public float getPreco() {
-		return Float.parseFloat(inputPreco.getText());
+		return Float.parseFloat(iptPreco.getText().trim());
 	}
 	
 	public Collection<Integer> getIdAutores() {
@@ -356,14 +414,13 @@ public class JanelaCadastraLivro extends JFrame {
 	}
 	
 	public void LimparDados() {
-		inputTitulo.setText("");
-		inputIsbn.setText("");
-		inputPreco.setText("");
-		inputIdEditora.setText("");
-		inputNomeEditora.setText("");
+		iptTitulo.setText("");
+		iptIsbn.setText("");
+		iptPreco.setText("");
+		iptIdEditora.setText("");
+		iptNomeEditora.setText("");
 
 		dtmTabelaAutores.setNumRows(0);
-		dtmSelecaoAutores.setNumRows(0);
 	}
 	
 	class eventFecharJanela implements WindowListener{

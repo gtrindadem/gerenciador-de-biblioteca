@@ -31,7 +31,8 @@ public class JanelaCadastraEditora extends JFrame {
 	
 	public void initComponents() {
 		setTitle("Cadastro de Editora");
-		setBounds(765, 445, 400, 170);
+		setSize(400, 170);
+		setLocationRelativeTo(null);
 		setLayout(new BoxLayout(getContentPane(), BoxLayout.PAGE_AXIS));
 		
 		//Label Titulo
@@ -72,7 +73,7 @@ public class JanelaCadastraEditora extends JFrame {
         add(panelBtnCadastrar);
 	}
 	
-	public void setActionListenerCadastraEditora(ActionListener e) {
+	public void setActionListenerCadastrarEditora(ActionListener e) {
 		actionCadastrarEditora = e;
 	}
 	
@@ -109,11 +110,11 @@ public class JanelaCadastraEditora extends JFrame {
 	
 	//Getters do form
 	public String getNomeEditora() {
-		return iptNomeEditora.getText();
+		return iptNomeEditora.getText().trim();
 	}
 	
 	public String getSiteEditora() {
-		return iptSiteEditora.getText();
+		return iptSiteEditora.getText().trim();
 	}
 	
 	public void limparDados() {

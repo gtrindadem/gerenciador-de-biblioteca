@@ -88,18 +88,35 @@ public class DaoMySql implements Dao {
 	}
 
 	@Override
-	public void cadastraLivro(String titulo, String isbn, int idEditora, float preco) throws Exception{
+	public void cadastraLivro(Livro livro, Collection<Integer> idAutores) throws Exception{
 		String qInsert = "INSERT books VALUES(?, ?, ?, ?)";
 		
 		try {
 			PreparedStatement pstm = connection.prepareStatement(qInsert);
-			pstm.setString(1, titulo);
-			pstm.setString(2, isbn);
-			pstm.setInt(3, idEditora);
-			pstm.setDouble(4, preco);
+			pstm.setString(1, livro.getTitle());
+			pstm.setString(2, livro.getIsbn());
+			pstm.setInt(3, livro.getIdEditora());
+			pstm.setDouble(4, livro.getPreco());
 			pstm.executeUpdate();
 		}catch(SQLException e) {
 			System.out.println("DAO Cadastra Livro: " + e.getMessage());
+			throw new Exception(e.getMessage());
+		}
+		
+		qInsert = "INSERT booksauthors VALUES(?, ?, ?)";
+		
+		try {
+			PreparedStatement pstm = connection.prepareStatement(qInsert);
+			pstm.setString(1, livro.getIsbn());
+			int i = 1;
+			for(int idAutor: idAutores) {
+				pstm.setInt(2, idAutor);
+				pstm.setInt(3, i);
+				i++;
+				pstm.executeUpdate();
+			}
+		}catch(SQLException e) {
+			System.out.println("DAO Cadastra Relação Livro-Autor: " + e.getMessage());
 			throw new Exception(e.getMessage());
 		}
 	}
@@ -155,4 +172,94 @@ public class DaoMySql implements Dao {
 			throw new Exception(e.getMessage());
 		}
 	}
+
+	@Override
+	public void excluirLivro(int isbn) {
+		String qDelete = "DELETE FROM books WHERE isbn = ?";
+		
+		try {
+			PreparedStatement pstm = connection.prepareStatement(qDelete);
+			pstm.setInt(1, isbn);
+			pstm.executeUpdate();
+		}catch(SQLException e) {
+			e.printStackTrace();
+			System.out.println(e.getMessage());
+		}
+	}
+	
+	@Override
+	public void excluirEditora(int id) {
+		String qDelete = "DELETE FROM publishers WHERE publisher_id = ?";
+		
+		try {
+			PreparedStatement pstm = connection.prepareStatement(qDelete);
+			pstm.setInt(1, id);
+			pstm.executeUpdate();
+		}catch(SQLException e) {
+			e.printStackTrace();
+			System.out.println(e.getMessage());
+		}
+	}
+
+	@Override
+	public void excluirAutor(int id) {
+		String qDelete = "DELETE FROM authors WHERE author_id = ?";
+		
+		try {
+			PreparedStatement pstm = connection.prepareStatement(qDelete);
+			pstm.setInt(1, id);
+			pstm.executeUpdate();
+		}catch(SQLException e) {
+			e.printStackTrace();
+			System.out.println(e.getMessage());
+		}
+	}
+	
+	@Override
+	public void alterarLivro(int isbn, float preco) {
+		String qUpdate = "UPDATE books SET price = ? WHERE isbn = ?";
+		
+		try {
+			PreparedStatement pstm = connection.prepareStatement(qUpdate);
+			pstm.setDouble(1, preco);
+			pstm.setInt(2, isbn);
+			pstm.executeUpdate();
+		}catch(SQLException e) {
+			e.printStackTrace();
+			System.out.println(e.getMessage());
+		}
+	}
+
+	@Override
+	public void alterarEditora(Editora novaEditora) {
+		String qUpdate = "UPDATE publishers SET name = ?, url = ? WHERE publisher_id = ?";
+		
+		try {
+			PreparedStatement pstm = connection.prepareStatement(qUpdate);
+			pstm.setString(1, novaEditora.getName());
+			pstm.setString(2, novaEditora.getUrl());
+			pstm.setInt(3, novaEditora.getId());
+			pstm.executeUpdate();
+		}catch(SQLException e) {
+			e.printStackTrace();
+			System.out.println(e.getMessage());
+		}
+	}
+	
+	@Override
+	public void alterarAutor(Autor novoAutor) {
+		String qUpdate = "UPDATE authors SET fname = ?, name = ? WHERE author_id = ?";
+		
+		try {
+			PreparedStatement pstm = connection.prepareStatement(qUpdate);
+			pstm.setString(1, novoAutor.getNome());
+			pstm.setString(2, novoAutor.getSobrenome());
+			pstm.setInt(3, novoAutor.getId());
+			pstm.executeUpdate();
+		}catch(SQLException e) {
+			e.printStackTrace();
+			System.out.println(e.getMessage());
+		}
+	}
+
 }

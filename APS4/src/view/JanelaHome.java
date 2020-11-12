@@ -1,257 +1,285 @@
 package view;
 
-import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Collection;
 import java.util.Map;
 
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 
 import entity.Autor;
 import entity.Editora;
 import entity.Livro;
 
 public class JanelaHome extends JFrame implements View {
-	JanelaBuscaLivro janelaBuscaLivro;
+	JanelaLivro janelaLivro;
 	JanelaCadastraLivro janelaCadastraLivro;
+	JanelaAlterarExcluirLivro janelaAlteraLivro;
 	
-	JanelaBuscaEditora janelaBuscaEditora;
+	JanelaEditora janelaEditora;
 	JanelaCadastraEditora janelaCadastraEditora;
 	
-	JanelaBuscaAutor janelaBuscaAutor;
+	JanelaAutor janelaAutor;
 	JanelaCadastraAutor janelaCadastraAutor;
 	
+	ActionListener actionBuscarLivro;
+	ActionListener actionCadastrarLivro;
+	
+	JButton btnLivros;
+	JButton btnEditoras;
+	JButton btnAutores;
+	
 	public JanelaHome() {
-		janelaBuscaLivro = new JanelaBuscaLivro();
-		janelaBuscaAutor = new JanelaBuscaAutor();
-		janelaBuscaEditora = new JanelaBuscaEditora();
+		janelaLivro = new JanelaLivro();
+		janelaAutor = new JanelaAutor();
+		janelaEditora = new JanelaEditora();
 		
-		janelaCadastraLivro = new JanelaCadastraLivro(janelaBuscaAutor.dtm);
-		janelaCadastraEditora = new JanelaCadastraEditora();
-		janelaCadastraAutor = new JanelaCadastraAutor();
+		janelaAlteraLivro = new JanelaAlterarExcluirLivro();
 		
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		initComponents();
 	}
 	
 	private void initComponents() {
-		setLayout(new BorderLayout());
-		setBounds(760, 440, 400, 200);
+		setTitle("Biblioteca");
+		setLayout(new BoxLayout(getContentPane(), BoxLayout.PAGE_AXIS));
+		setSize(400, 150);
+		setLocationRelativeTo(null);
 		
-		JMenuBar menuBar = new JMenuBar();
-		setJMenuBar(menuBar);
+		JPanel panelLogo = new JPanel(new FlowLayout(FlowLayout.CENTER));
+		panelLogo.add(new JLabel("BIBLIOTECA AMAZÔNIA"));
+		add(panelLogo);
 		
-		JMenu menuConsulta = new JMenu("Consulta");
-		JMenu menuCadastro = new JMenu("Cadastro");
-		menuBar.add(menuConsulta);
-		menuBar.add(menuCadastro);
+		JPanel panelBotoes = new JPanel(new FlowLayout(FlowLayout.CENTER));
+		btnLivros = new JButton("LIVROS");
+		btnLivros.setPreferredSize(new Dimension(95, 60));
+		btnLivros.addActionListener(new AbrirLivros());
 		
-		// ----- Menu Consultar -----
-		JMenuItem menuItemConsultarLivros = new JMenuItem("Consultar Livros");
-		menuConsulta.add(menuItemConsultarLivros);
-		menuItemConsultarLivros.addActionListener(new AbrirBuscaLivro());
+		btnEditoras = new JButton("EDITORAS");
+		btnEditoras.setPreferredSize(new Dimension(95, 60));
+		btnEditoras.addActionListener(new AbrirEditoras());
 		
-		JMenuItem menuItemConsultarEditoras = new JMenuItem("Consultar Editoras");
-		menuConsulta.add(menuItemConsultarEditoras);
-		menuItemConsultarEditoras.addActionListener(new AbrirBuscaEditora());
+		btnAutores = new JButton("AUTORES");
+		btnAutores.setPreferredSize(new Dimension(95, 60));
+		btnAutores.addActionListener(new AbrirAutores());
 		
-		JMenuItem menuItemConsultarAutores = new JMenuItem("Consultar Autores");
-		menuConsulta.add(menuItemConsultarAutores);
-		menuItemConsultarAutores.addActionListener(new AbrirBuscaAutor());
+		panelBotoes.add(btnLivros);
+		panelBotoes.add(btnEditoras);
+		panelBotoes.add(btnAutores);
 		
-		// ----- Menu Cadastrar -----
-		JMenuItem menuItemCadastrarLivro = new JMenuItem("Cadastrar Livro");
-		menuCadastro.add(menuItemCadastrarLivro);
-		menuItemCadastrarLivro.addActionListener(new AbrirCadastrarLivro());
-		
-		JMenuItem menuItemCadastrarEditora = new JMenuItem("Cadastrar Editora");
-		menuCadastro.add(menuItemCadastrarEditora);
-		menuItemCadastrarEditora.addActionListener(new AbrirCadastrarEditora());
-		
-		JMenuItem menuItemCadastrarAutor = new JMenuItem("Cadastrar Autor");
-		menuCadastro.add(menuItemCadastrarAutor);
-		menuItemCadastrarAutor.addActionListener(new AbrirCadastrarAutor());
+		add(panelBotoes);
 		
 		setVisible(true);
 	}
 	
 	//Livro - Busca
-	class AbrirBuscaLivro implements ActionListener {
+	class AbrirLivros implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			janelaBuscaLivro.actionBuscarLivro.actionPerformed(e);
-			janelaBuscaLivro.setVisible(true);
+			janelaLivro.dispose();
+			janelaLivro = new JanelaLivro();
+			janelaLivro.setActionListenerBuscarLivro(actionBuscarLivro);
+			janelaLivro.setActionListenerCadastrarLivro(actionCadastrarLivro);
+			actionBuscarLivro.actionPerformed(e);
+
+			janelaLivro.setVisible(true);
+			janelaLivro.janelaCadastraLivro.janelaBuscaEditora = janelaEditora;
+			janelaLivro.janelaCadastraLivro.janelaBuscaAutor = janelaAutor;
 		}
 		
 	}
 	
 	@Override
 	public void setActionListenerBuscaLivro(ActionListener e) {
-		this.janelaBuscaLivro.setActionListenerBuscarLivro(e);;
+		actionBuscarLivro = e;
+		this.janelaLivro.setActionListenerBuscarLivro(e);
 	}
 
 	@Override
 	public String getTituloBuscaLivro() {
-		return this.janelaBuscaLivro.getTitulo();
+		return this.janelaLivro.getTitulo();
 	}
 
 	@Override
 	public void listaLivros(Collection<Livro> livros) {
-		janelaBuscaLivro.mostraLivros(livros);
+		janelaLivro.mostraLivros(livros);
 	}
 	
 	//Livro - Cadastro
-	class AbrirCadastrarLivro implements ActionListener {
-
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			janelaBuscaAutor.actionBuscarAutor.actionPerformed(e);
-			janelaBuscaEditora.actionBuscarEditora.actionPerformed(e);
-			janelaCadastraLivro.setVisible(true);
-			janelaCadastraLivro.janelaBuscaEditora = janelaBuscaEditora;
-			janelaCadastraLivro.janelaBuscaAutor = janelaBuscaAutor;
-		}
-		
-	}
-	
 	@Override
 	public void setActionListenerCadastraLivro(ActionListener e) {
-		janelaCadastraLivro.setActionListenerCadastraLivro(e);
+		actionCadastrarLivro = e;
 	}
 	
-	@Override
-	public String getTituloCadastraLivro() {
-		return janelaCadastraLivro.getTitulo();
-	}
-
-	@Override
-	public String getIsbnCadastraLivro() {
-		return janelaCadastraLivro.getIsbn();
-	}
-
-	@Override
-	public int getIdEditoraCadastraLivro() {
-		return janelaCadastraLivro.getIdEditora();
-	}
-
-	@Override
-	public float getPrecoCadastraLivro() {
-		return janelaCadastraLivro.getPreco();
+	public Livro getLivroCadastrarLivro() {
+		String titulo = janelaLivro.janelaCadastraLivro.getTitulo();
+		String isbn = janelaLivro.janelaCadastraLivro.getIsbn();
+		int idEditora = janelaLivro.janelaCadastraLivro.getIdEditora();
+		float preco = janelaLivro.janelaCadastraLivro.getPreco();
+		
+		return new Livro(titulo, isbn, idEditora, preco);
 	}
 	
 	@Override
 	public Collection<Integer> getIdAutoresCadastraLivro() {
-		return janelaCadastraLivro.getIdAutores();
+		return janelaLivro.janelaCadastraLivro.getIdAutores();
+	}
+	
+	//Livro - Exclusão
+	public void setActionListenerExcluirLivro(ActionListener e) {
+		//TODO
+	}
+	
+	public int getIsbnExcluirLivro() {
+		//TODO
+		return 0;
+	}
+	
+	//Livro - Alterar
+	public void setActionListenerAlterarLivro(ActionListener e) {
+		//TODO
+	}
+	
+	public float getPrecoAlterarLivro() {
+		//TODO
+		return 0;
 	}
 	
 	
-	
-	
-	
-	
 	//Editora - Busca
-	class AbrirBuscaEditora implements ActionListener{
+	class AbrirEditoras implements ActionListener{
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			janelaBuscaEditora.actionBuscarEditora.actionPerformed(e);
-			janelaBuscaEditora.setVisible(true);
+			janelaEditora.LimparDados();
+			janelaEditora.actionBuscarEditora.actionPerformed(e);
+			janelaEditora.setVisible(true);
 		}
 		
 	}
 	
 	public void setActionListenerBuscaEditora(ActionListener e) {
-		janelaBuscaEditora.setActionListenerBuscaEditora(e);
+		janelaEditora.setActionListenerBuscaEditora(e);
 	}
 	
 	@Override
 	public String getNomeBuscaEditora() {
-		return janelaBuscaEditora.getNome();
+		return janelaEditora.getNome();
 	}
 	
 	@Override
 	public void listaEditoras(Map<Integer, Editora> editoras) {
-		janelaBuscaEditora.mostraEditoras(editoras);
+		janelaEditora.mostraEditoras(editoras);
 	}
 
 	//Editora - Cadastro
-	class AbrirCadastrarEditora implements ActionListener{
-
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			janelaCadastraEditora.setVisible(true);
-		}
-		
-	}
 	public void setActionListenerCadastraEditora(ActionListener e) {
-		janelaCadastraEditora.setActionListenerCadastraEditora(e);
+		janelaEditora.janelaCadastraEditora.setActionListenerCadastrarEditora(e);
 	}
+	
 	public String getNomeCadastraEditora() {
-		return janelaCadastraEditora.getNomeEditora();
+		return janelaEditora.janelaCadastraEditora.getNomeEditora();
 	}
+	
 	public String getSiteCadastraEditora() {
-		return janelaCadastraEditora.getSiteEditora();
+		return janelaEditora.janelaCadastraEditora.getSiteEditora();
+	}
+	
+	//Editora - Exclusão
+	public void setActionListenerExcluirEditora(ActionListener e) {
+		janelaEditora.janelaAlterarExcluirEditora.setActionListenerExcluirEditora(e);
+	}
+	
+	public int getIdExcluirEditora() {
+		return janelaEditora.janelaAlterarExcluirEditora.getIdEditora();
+	}
+	
+	//Editora - Alterar
+	public void setActionListenerAlterarEditora(ActionListener e) {
+		janelaEditora.janelaAlterarExcluirEditora.setActionListenerAlterarEditora(e);
+	}
+	
+	public Editora getEditoraAlterarEditora() {
+		int id = janelaEditora.janelaAlterarExcluirEditora.getIdEditora();
+		String nome = janelaEditora.janelaAlterarExcluirEditora.getNomeEditora();
+		String site = janelaEditora.janelaAlterarExcluirEditora.getSiteEditora();
+		
+		return new Editora(id, nome, site);
 	}
 	
 	
-	
-	
-	// Autor - Busca
-	class AbrirBuscaAutor implements ActionListener{
+	//Autor - Busca
+	class AbrirAutores implements ActionListener{
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			janelaBuscaAutor.actionBuscarAutor.actionPerformed(e);
-			janelaBuscaAutor.setVisible(true);
+			janelaAutor.LimparDados();
+			janelaAutor.actionBuscarAutor.actionPerformed(e);
+			janelaAutor.setVisible(true);
 		}
 		
 	}
 	
 	@Override
 	public void setActionListenerBuscaAutor(ActionListener e) {
-		janelaBuscaAutor.setActionListenerBuscarAutor(e);
+		janelaAutor.setActionListenerBuscarAutor(e);
 	}
 
 	@Override
 	public String getNomeAutor() {
-		return janelaBuscaAutor.getInputNome();
+		return janelaAutor.getInputNome();
 	}
 
 	@Override
 	public void listaAutores(Collection<Autor> autores) {
-		janelaBuscaAutor.mostraAutores(autores);
+		janelaAutor.mostraAutores(autores);
 	}
-
+	
+	//Autor - Cadastro
+	public void setActionListenerCadastraAutor(ActionListener e) {
+		janelaAutor.janelaCadastraAutor.setActionListenerCadastrarAutor(e);
+	}
+	public String getNomeCadastraAutor() {
+		return janelaAutor.janelaCadastraAutor.getNomeAutor();
+	}
+	public String getSobrenomeCadastraAutor() {
+		return janelaAutor.janelaCadastraAutor.getSobrenomeAutor();
+	}
+	
+	//Autor - Exclusão
+	public void setActionListenerExcluirAutor(ActionListener e) {
+		janelaAutor.janelaAlterarExcluirAutor.setActionListenerExcluirAutor(e);
+	}
+	
+	public int getIdExcluirAutor() {
+		return janelaAutor.janelaAlterarExcluirAutor.getIdAutor();
+	}
+	
+	//Autor - Alterar
+	public void setActionListenerAlterarAutor(ActionListener e) {
+		janelaAutor.janelaAlterarExcluirAutor.setActionListenerAlterarAutor(e);
+	}
+	
+	public Autor getAutorAlterarAutor() {
+		int id = janelaAutor.janelaAlterarExcluirAutor.getIdAutor();
+		String nome = janelaAutor.janelaAlterarExcluirAutor.getNomeAutor();
+		String sobrenome = janelaAutor.janelaAlterarExcluirAutor.getSobrenomeAutor();
+		
+		return new Autor(id, nome, sobrenome);
+	}
+	
+	
 	@Override
 	public void msg(String msg) {
 		JOptionPane.showMessageDialog(null, msg);
 	}
-	
-	//Autor - Cadastro
-	class AbrirCadastrarAutor implements ActionListener{
-
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			janelaCadastraAutor.setVisible(true);
-		}
-		
-	}
-	public void setActionListenerCadastraAutor(ActionListener e) {
-		janelaCadastraAutor.setActionListenerCadastraAutor(e);
-	}
-	public String getNomeCadastraAutor() {
-		return janelaCadastraAutor.getNomeAutor();
-	}
-	public String getSobrenomeCadastraAutor() {
-		return janelaCadastraAutor.getSobrenomeAutor();
-	}
-	
-	
 	
 }

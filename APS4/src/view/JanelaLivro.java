@@ -3,9 +3,8 @@ package view;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import java.util.Collection;
 
 import javax.swing.JButton;
@@ -18,16 +17,21 @@ import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
 import entity.Livro;
-import view.JanelaCadastraLivro.eventFecharJanela;
 
-public class JanelaBuscaLivro extends JFrame {
+public class JanelaLivro extends JFrame {
+	JanelaCadastraLivro janelaCadastraLivro;
+	
+	JTable tabela;
 	DefaultTableModel dtm;
+	
 	JButton btnBuscaLivro;
 	JTextField txtFldBuscaLivro;
 	
-	ActionListener actionBuscarLivro;
+	JButton btnCadNovoLivro;
 	
-	public JanelaBuscaLivro() {
+	public JanelaLivro() {
+		janelaCadastraLivro = new JanelaCadastraLivro();
+		
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		initComponents();
 	}
@@ -35,8 +39,8 @@ public class JanelaBuscaLivro extends JFrame {
 	void initComponents() {
 		setTitle("Consultar Livros");
 		setLayout(new BorderLayout());
-		setBounds(770, 450, 600, 280);
-		addWindowListener(new eventFecharJanela());
+		setSize(600, 330);
+		setLocationRelativeTo(null);
 		
 		//Area da tabela
 		dtm = new DefaultTableModel(new Object[] {"Título", "ISBN", "Editora", "Preço"}, 0) {
@@ -45,7 +49,7 @@ public class JanelaBuscaLivro extends JFrame {
 				return false;
 			}
 		};
-		JTable tabela = new JTable(dtm);
+		tabela = new JTable(dtm);
 		tabela.getColumnModel().getColumn(1).setMinWidth(100);
 		tabela.getColumnModel().getColumn(1).setMaxWidth(100);
 		tabela.getColumnModel().getColumn(2).setMaxWidth(55);
@@ -61,13 +65,30 @@ public class JanelaBuscaLivro extends JFrame {
 		btnBuscaLivro = new JButton("Buscar");
 		panelBuscaLivro.add(txtFldBuscaLivro);
 		panelBuscaLivro.add(btnBuscaLivro);
+		panelBuscaLivro.add(new JLabel("Duplo click na tabela para alterar/excluir um livro"));
 		add(panelBuscaLivro, BorderLayout.CENTER);
+		
+		btnCadNovoLivro = new JButton("Cadastrar NOVO+");
+		btnCadNovoLivro.addActionListener(new ActionBtnCadNovoLivro());
+		add(btnCadNovoLivro, BorderLayout.PAGE_END);
 		
 	}
 	
 	public void setActionListenerBuscarLivro(ActionListener e) {
-		actionBuscarLivro = e;
-		btnBuscaLivro.addActionListener(actionBuscarLivro);
+		btnBuscaLivro.addActionListener(e);
+	}
+	
+	public void setActionListenerCadastrarLivro(ActionListener e) {
+		janelaCadastraLivro.setActionListenerCadastrarLivro(e);
+	}
+	
+	class ActionBtnCadNovoLivro implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			janelaCadastraLivro.setVisible(true);
+		}
+		
 	}
 	
 	public void mostraLivros(Collection<Livro> livros) {
@@ -78,52 +99,14 @@ public class JanelaBuscaLivro extends JFrame {
         }
 	}
 	
+	//Get do form
 	public String getTitulo() {
 		return txtFldBuscaLivro.getText();
 	}
 	
-	class eventFecharJanela implements WindowListener{
-
-		@Override
-		public void windowOpened(WindowEvent e) {
-			// TODO Auto-generated method stub
-			
-		}
-
-		@Override
-		public void windowClosing(WindowEvent e) {
-			txtFldBuscaLivro.setText("");
-		}
-
-		@Override
-		public void windowClosed(WindowEvent e) {
-			// TODO Auto-generated method stub
-			
-		}
-
-		@Override
-		public void windowIconified(WindowEvent e) {
-			// TODO Auto-generated method stub
-			
-		}
-
-		@Override
-		public void windowDeiconified(WindowEvent e) {
-			// TODO Auto-generated method stub
-			
-		}
-
-		@Override
-		public void windowActivated(WindowEvent e) {
-			// TODO Auto-generated method stub
-			
-		}
-
-		@Override
-		public void windowDeactivated(WindowEvent e) {
-			// TODO Auto-generated method stub
-			
-		}
-		
+	public void LimparDados() {
+		dtm.setNumRows(0);
+		txtFldBuscaLivro.setText("");
 	}
+	
 }

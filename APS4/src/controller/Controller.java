@@ -2,7 +2,6 @@ package controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Collection;
 
 import model.Dao;
 import view.View;
@@ -24,6 +23,10 @@ public class Controller {
 		view.setActionListenerCadastraLivro(new ActionCadastraLivro());
 		view.setActionListenerCadastraEditora(new ActionCadastraEditora());
 		view.setActionListenerCadastraAutor(new ActionCadastraAutor());
+		view.setActionListenerExcluirEditora(new ActionExcluirEditora());
+		view.setActionListenerExcluirAutor(new ActionExcluirAutor());
+		view.setActionListenerAlterarEditora(new ActionAlterarEditora());
+		view.setActionListenerAlterarAutor(new ActionAlterarAutor());
 	}
 
 	class ActionBuscaLivro implements ActionListener{
@@ -57,19 +60,8 @@ public class Controller {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			String titulo = view.getTituloCadastraLivro();
-			String isbn = view.getIsbnCadastraLivro();
-			int idEditora = view.getIdEditoraCadastraLivro();
-			float preco = view.getPrecoCadastraLivro();
-			Collection<Integer> idAutores = view.getIdAutoresCadastraLivro();
-			
 			try{
-				dao.cadastraLivro(titulo, isbn, idEditora, preco);
-				try {
-					dao.cadastraRelacaoLivrosAutores(isbn, idAutores);
-				}catch(Exception ex) {
-					throw new Exception(ex.getMessage());
-				}
+				dao.cadastraLivro(view.getLivroCadastrarLivro(), view.getIdAutoresCadastraLivro());
 				view.msg("Livro cadastrado com sucesso!");
 			}catch(Exception ex) {
 				view.msg("Erro ao cadastrar livro: " + ex.getMessage());
@@ -105,10 +97,46 @@ public class Controller {
 			
 			try {
 				dao.cadastraAutor(nomeAutor, sobrenomeAutor);
-				view.msg("Autor cadaastrado com sucesso!");
+				view.msg("Autor cadastrado com sucesso!");
 			}catch(Exception ex) {
 				view.msg(ex.getMessage());
 			}
+		}
+		
+	}
+	
+	class ActionExcluirEditora implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			dao.excluirEditora(view.getIdExcluirEditora());
+		}
+		
+	}
+	
+	class ActionExcluirAutor implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			dao.excluirAutor(view.getIdExcluirAutor());
+		}
+		
+	}
+	
+	class ActionAlterarEditora implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			dao.alterarEditora(view.getEditoraAlterarEditora());
+		}
+		
+	}
+	
+	class ActionAlterarAutor implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			dao.alterarAutor(view.getAutorAlterarAutor());
 		}
 		
 	}
