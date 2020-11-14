@@ -20,7 +20,7 @@ public interface View {
 	public Collection<Integer> getIdAutoresCadastraLivro();
 	
 	public void setActionListenerExcluirLivro(ActionListener e);
-	public int getIsbnExcluirLivro();
+	public String getIsbnAlterarExcluirLivro();
 	
 	public void setActionListenerAlterarLivro(ActionListener e);
 	public float getPrecoAlterarLivro();
@@ -40,6 +40,10 @@ public interface View {
 	public void setActionListenerAlterarEditora(ActionListener e);
 	public Editora getEditoraAlterarEditora();
 	
+	public void setActionListenerDetalharEditora(ActionListener e);
+	public int getIdDetalharEditora();
+	public void listarLivrosDetalharEditora(Collection<Livro> livros);
+	
 	//Autor
 	public void setActionListenerBuscaAutor(ActionListener e);
 	public String getNomeAutor();
@@ -55,6 +59,9 @@ public interface View {
 	public void setActionListenerAlterarAutor(ActionListener e);
 	public Autor getAutorAlterarAutor();
 	
+	public void setActionListenerDetalharAutor(ActionListener e);
+	public int getIdDetalharAutor();
+	public void listarLivrosDetalharAutor(Collection<Livro> livros);
 	
 	public void msg(String msg);
 }

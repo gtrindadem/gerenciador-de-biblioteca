@@ -13,6 +13,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -23,17 +24,12 @@ public class JanelaAlterarExcluirLivro extends JFrame {
 	JTextField iptTitulo;
 	JTextField iptIsbn;
 	JTextField iptPreco;
-	JTextField iptIdEditora;
-	JTextField iptNomeEditora;
-	JButton btnListarEditora;
-	JTable tabelaAutores;
-	DefaultTableModel dtmTabelaAutores;
-	JButton btnSelecionarAutores;
+	
 	JButton btnAlterar;
 	
 	ActionListener actionAlterarLivro;
+	ActionListener actionExcluirLivro;
 	
-
 	public JanelaAlterarExcluirLivro() {
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		initComponents();
@@ -41,7 +37,8 @@ public class JanelaAlterarExcluirLivro extends JFrame {
 	
 	public void initComponents() {
 		setTitle("Alteração de Livro");
-		setBounds(765, 445, 450, 350);
+		setSize(370, 180);
+		setLocationRelativeTo(null);
 		setLayout(new BoxLayout(getContentPane(), BoxLayout.PAGE_AXIS));
 		
 		//Label Titulo
@@ -60,6 +57,7 @@ public class JanelaAlterarExcluirLivro extends JFrame {
         c.gridy = 0;
         c.anchor = GridBagConstraints.LINE_START;
         iptTitulo = new JTextField(20);
+        iptTitulo.setEditable(false);
         panelForm.add(iptTitulo, c);
         c.gridx = 0;
         c.gridy = 1;
@@ -69,6 +67,7 @@ public class JanelaAlterarExcluirLivro extends JFrame {
         c.gridy = 1;
         c.anchor = GridBagConstraints.LINE_START;
         iptIsbn = new JTextField(10);
+        iptIsbn.setEditable(false);
         panelForm.add(iptIsbn, c);
         c.gridx = 0;
         c.gridy = 2;
@@ -79,67 +78,45 @@ public class JanelaAlterarExcluirLivro extends JFrame {
         c.anchor = GridBagConstraints.LINE_START;
         iptPreco = new JTextField(5);
         panelForm.add(iptPreco, c);
-        c.gridx = 0;
-        c.gridy = 3;
-        c.anchor = GridBagConstraints.LINE_END;
-        panelForm.add(new JLabel("EDITORA: "), c);
-        c.gridx = 1;
-        c.gridy = 3;
-        JPanel panelIptsEditora = new JPanel();
-        iptIdEditora = new JTextField(3);
-        iptIdEditora.setEditable(false);
-        iptNomeEditora = new JTextField(12);
-        iptNomeEditora.setEditable(false);
-        btnListarEditora = new JButton("Listar Editora");
-        btnListarEditora.addActionListener(new ActionBtnListarEditora());
-        panelIptsEditora.add(iptIdEditora);
-        panelIptsEditora.add(iptNomeEditora);
-        panelIptsEditora.add(btnListarEditora);
-        panelForm.add(panelIptsEditora, c);
-        c.gridx = 0;
-        c.gridy = 4;
-        c.anchor = GridBagConstraints.LINE_END;
-        panelForm.add(new JLabel("AUTOR(ES): "), c);
-        c.gridx = 1;
-        c.gridy = 4;
-        c.anchor = GridBagConstraints.CENTER;
-        dtmTabelaAutores = new DefaultTableModel(new Object[] {"ID", "Nome", "Sobrenome"}, 0) {
-			@Override
-			public boolean isCellEditable(int row, int column) {
-				return false;
-			}
-		};
-        tabelaAutores = new JTable(dtmTabelaAutores);
-        tabelaAutores.getColumnModel().getColumn(0).setMaxWidth(50);
-        JScrollPane scrollPaneTabelaAutores = new JScrollPane(tabelaAutores);
-        scrollPaneTabelaAutores.setPreferredSize(new Dimension(300,100));
-        panelForm.add(scrollPaneTabelaAutores, c);
-        c.gridx = 1;
-        c.gridy = 5;
-        btnSelecionarAutores = new JButton("Selecionar Autores");
-        btnSelecionarAutores.addActionListener(new ActionBtnSelecionarAutores());
-        panelForm.add(btnSelecionarAutores, c);
         
-        JPanel panelBtnAlterar = new JPanel(new FlowLayout(FlowLayout.TRAILING));
-        btnAlterar = new JButton("Alterar Livro");
+        JPanel panelBotoes = new JPanel();
+        JButton btnExcluir = new JButton("Excluir");
+        btnExcluir.addActionListener(new ActionBtnExcluir());
+        btnAlterar = new JButton("Salvar");
         btnAlterar.addActionListener(new ActionBtnAlterar());
-        panelBtnAlterar.add(btnAlterar);
+        JButton btnCancelar = new JButton("Cancelar");
+        btnCancelar.addActionListener(new ActionBtnCancelar());
+        panelBotoes.add(btnExcluir);
+        panelBotoes.add(btnAlterar);
+        panelBotoes.add(btnCancelar);
         
         add(panelTitulo);
         add(panelForm);
-        add(panelBtnAlterar);
+        add(panelBotoes);
 	}
 	
 	public void setActionListenerAlterarLivro(ActionListener e) {
 		actionAlterarLivro = e;
 	}
 	
-	class ActionBtnListarEditora implements ActionListener {
+	public void setActionListenerExcluirLivro(ActionListener e) {
+		actionExcluirLivro = e;
+	}
+	
+	class ActionBtnExcluir implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			// TODO Auto-generated method stub
-			
+			Object[] options = { "SIM", "CANCELAR" };
+		    int resp = JOptionPane.showOptionDialog(null, "Tem certeza que deseja excluir este cadastro?\nTodos os dados serão perdidos!", "Aviso",
+		    JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE,
+		              null, options, options[0]);
+		    if(resp == 0) {
+		    	actionExcluirLivro.actionPerformed(e);
+		    	JOptionPane.showMessageDialog(null, "Livro excluido com sucesso!");
+		    	limparDados();
+		    	dispose();
+		    }
 		}
 		
 	}
@@ -148,27 +125,60 @@ public class JanelaAlterarExcluirLivro extends JFrame {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			// TODO Auto-generated method stub
-			
+			Object[] options = { "SIM", "CANCELAR" };
+		    int resp = JOptionPane.showOptionDialog(null, "Tem certeza que deseja salvar as alterações?\nTodos os antigos dados serão perdidos!", "Aviso",
+		    JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE,
+		              null, options, options[0]);
+		    if(resp == 0) {
+		    	//Validação de entrada de dados do form
+				String msg = "";
+				try {
+					Float.parseFloat(iptPreco.getText().trim());
+				}catch(NumberFormatException error) {
+					if(iptPreco.getText().trim().equals("")) {
+						msg += " PREÇO não preenchido;";
+					}else {
+						msg += " PREÇO inválido (Utilize apenas \".\")";
+					}
+				}
+				
+				if(msg.equals("")) {
+					actionAlterarLivro.actionPerformed(e);
+			    	JOptionPane.showMessageDialog(null, "Preço alterado com sucesso!");
+			    	limparDados();
+			    	dispose();
+				}else {
+					JOptionPane.showMessageDialog(null, "Erro ao alterar preço:" + msg,
+							"Erro ao salvar", JOptionPane.ERROR_MESSAGE);
+				}    	
+		    }
 		}
 		
 	}
 	
-	class ActionBtnSelecionarAutores implements ActionListener {
+	class ActionBtnCancelar implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			// TODO Auto-generated method stub
-			
+			limparDados();
+			dispose();
 		}
 		
 	}
 	
-	//Getters do form
-	public String getTitulo() {
-		return iptTitulo.getText().trim();
+	public void setTitulo(String titulo) {
+		iptTitulo.setText(titulo);
 	}
 	
+	public void setIsbn(String isbn) {
+		iptIsbn.setText(isbn);
+	}
+	
+	public void setPreco(String preco) {
+		iptPreco.setText(preco);
+	}
+	
+	//Getters do form
 	public String getIsbn() {
 		return iptIsbn.getText().trim();
 	}
@@ -177,17 +187,10 @@ public class JanelaAlterarExcluirLivro extends JFrame {
 		return Float.parseFloat(iptPreco.getText().trim());
 	}
 	
-	public int getIdEditora() {
-		return Integer.parseInt(iptIdEditora.getText().trim());
-	}
-	
-	public Collection<Integer> getIdAutores() {
-		ArrayList<Integer> idAutores = new ArrayList<>();
-		for(int i = 0; i < dtmTabelaAutores.getRowCount(); i++) {
-			idAutores.add(Integer.parseInt(tabelaAutores.getValueAt(i, 0).toString()));
-		}
-		
-		return idAutores;
+	public void limparDados() {
+		iptTitulo.setText("");
+		iptIsbn.setText("");
+		iptPreco.setText("");
 	}
 	
 }

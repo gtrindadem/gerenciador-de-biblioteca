@@ -21,7 +21,6 @@ import entity.Livro;
 public class JanelaHome extends JFrame implements View {
 	JanelaLivro janelaLivro;
 	JanelaCadastraLivro janelaCadastraLivro;
-	JanelaAlterarExcluirLivro janelaAlteraLivro;
 	
 	JanelaEditora janelaEditora;
 	JanelaCadastraEditora janelaCadastraEditora;
@@ -40,8 +39,6 @@ public class JanelaHome extends JFrame implements View {
 		janelaLivro = new JanelaLivro();
 		janelaAutor = new JanelaAutor();
 		janelaEditora = new JanelaEditora();
-		
-		janelaAlteraLivro = new JanelaAlterarExcluirLivro();
 		
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		initComponents();
@@ -84,11 +81,8 @@ public class JanelaHome extends JFrame implements View {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			janelaLivro.dispose();
-			janelaLivro = new JanelaLivro();
-			janelaLivro.setActionListenerBuscarLivro(actionBuscarLivro);
-			janelaLivro.setActionListenerCadastrarLivro(actionCadastrarLivro);
-			actionBuscarLivro.actionPerformed(e);
+			janelaLivro.LimparDados();
+			janelaLivro.actionBuscarLivro.actionPerformed(e);
 
 			janelaLivro.setVisible(true);
 			janelaLivro.janelaCadastraLivro.janelaBuscaEditora = janelaEditora;
@@ -99,8 +93,7 @@ public class JanelaHome extends JFrame implements View {
 	
 	@Override
 	public void setActionListenerBuscaLivro(ActionListener e) {
-		actionBuscarLivro = e;
-		this.janelaLivro.setActionListenerBuscarLivro(e);
+		janelaLivro.setActionListenerBuscarLivro(e);
 	}
 
 	@Override
@@ -116,7 +109,7 @@ public class JanelaHome extends JFrame implements View {
 	//Livro - Cadastro
 	@Override
 	public void setActionListenerCadastraLivro(ActionListener e) {
-		actionCadastrarLivro = e;
+		janelaLivro.janelaCadastraLivro.setActionListenerCadastrarLivro(e);
 	}
 	
 	public Livro getLivroCadastrarLivro() {
@@ -135,22 +128,20 @@ public class JanelaHome extends JFrame implements View {
 	
 	//Livro - Exclusão
 	public void setActionListenerExcluirLivro(ActionListener e) {
-		//TODO
+		janelaLivro.janelaAlterarExcluirLivro.setActionListenerExcluirLivro(e);
 	}
 	
-	public int getIsbnExcluirLivro() {
-		//TODO
-		return 0;
+	public String getIsbnAlterarExcluirLivro() {
+		return janelaLivro.janelaAlterarExcluirLivro.getIsbn();
 	}
 	
 	//Livro - Alterar
 	public void setActionListenerAlterarLivro(ActionListener e) {
-		//TODO
+		janelaLivro.janelaAlterarExcluirLivro.setActionListenerAlterarLivro(e);
 	}
 	
 	public float getPrecoAlterarLivro() {
-		//TODO
-		return 0;
+		return janelaLivro.janelaAlterarExcluirLivro.getPreco();
 	}
 	
 	
@@ -215,6 +206,19 @@ public class JanelaHome extends JFrame implements View {
 		return new Editora(id, nome, site);
 	}
 	
+	//Editora - Detalhar
+	public void setActionListenerDetalharEditora(ActionListener e) {
+		janelaEditora.janelaDetalharEditora.setActionListenerDetalharEditora(e);
+	}
+	
+	public int getIdDetalharEditora() {
+		return janelaEditora.janelaDetalharEditora.getIdEditora();
+	}
+	
+	public void listarLivrosDetalharEditora(Collection<Livro> livros) {
+		janelaEditora.janelaDetalharEditora.mostraLivros(livros);
+	}
+	
 	
 	//Autor - Busca
 	class AbrirAutores implements ActionListener{
@@ -273,7 +277,19 @@ public class JanelaHome extends JFrame implements View {
 		String nome = janelaAutor.janelaAlterarExcluirAutor.getNomeAutor();
 		String sobrenome = janelaAutor.janelaAlterarExcluirAutor.getSobrenomeAutor();
 		
-		return new Autor(id, nome, sobrenome);
+		return new Autor(id, sobrenome, nome);
+	}
+	//Autor - Detalhar
+	public void setActionListenerDetalharAutor(ActionListener e) {
+		janelaAutor.janelaDetalharAutor.setActionListenerDetalharAutor(e);
+	}
+	
+	public int getIdDetalharAutor() {
+		return janelaAutor.janelaDetalharAutor.getIdEditora();
+	}
+	
+	public void listarLivrosDetalharAutor(Collection<Livro> livros) {
+		janelaAutor.janelaDetalharAutor.mostraLivros(livros);
 	}
 	
 	

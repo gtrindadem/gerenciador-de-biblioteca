@@ -174,12 +174,12 @@ public class DaoMySql implements Dao {
 	}
 
 	@Override
-	public void excluirLivro(int isbn) {
+	public void excluirLivro(String isbn) {
 		String qDelete = "DELETE FROM books WHERE isbn = ?";
 		
 		try {
 			PreparedStatement pstm = connection.prepareStatement(qDelete);
-			pstm.setInt(1, isbn);
+			pstm.setString(1, isbn);
 			pstm.executeUpdate();
 		}catch(SQLException e) {
 			e.printStackTrace();
@@ -216,13 +216,13 @@ public class DaoMySql implements Dao {
 	}
 	
 	@Override
-	public void alterarLivro(int isbn, float preco) {
+	public void alterarLivro(String isbn, float preco) {
 		String qUpdate = "UPDATE books SET price = ? WHERE isbn = ?";
 		
 		try {
 			PreparedStatement pstm = connection.prepareStatement(qUpdate);
 			pstm.setDouble(1, preco);
-			pstm.setInt(2, isbn);
+			pstm.setString(2, isbn);
 			pstm.executeUpdate();
 		}catch(SQLException e) {
 			e.printStackTrace();
@@ -262,4 +262,52 @@ public class DaoMySql implements Dao {
 		}
 	}
 
+	@Override
+	public Collection<Livro> detalharEditora(int idEditora) {
+		Collection<Livro> livros = new ArrayList<>();
+		
+		String qBusca = "SELECT * FROM books WHERE publisher_id = ?";
+		
+		try {
+			PreparedStatement pstm = connection.prepareStatement(qBusca);
+			pstm.setInt(1, idEditora);
+			ResultSet rs = pstm.executeQuery();
+			
+			Livro livro;
+			while(rs.next()) {
+				livro = new Livro(rs.getString(1), rs.getString(2), rs.getInt(3), rs.getFloat(4));
+				livros.add(livro);
+			}
+		}catch(SQLException e) {
+			e.printStackTrace();
+			System.out.println(e.getMessage());
+		}
+		
+		return livros;
+	}
+	
+	@Override
+	public Collection<Livro> detalharAutor(int idAutor) {
+		Collection<Livro> livros = new ArrayList<>();
+		
+		String qBusca = "SELECT * FROM books WHERE isbn IN (SELECT isbn FROM booksauthors WHERE author_id = ?)";
+		
+		try {
+			PreparedStatement pstm = connection.prepareStatement(qBusca);
+			pstm.setInt(1, idAutor);
+			ResultSet rs = pstm.executeQuery();
+			
+			Livro livro;
+			while(rs.next()) {
+				livro = new Livro(rs.getString(1), rs.getString(2), rs.getInt(3), rs.getFloat(4));
+				livros.add(livro);
+			}
+		}catch(SQLException e) {
+			e.printStackTrace();
+			System.out.println(e.getMessage());
+		}
+		
+		return livros;
+	}
+	
 }

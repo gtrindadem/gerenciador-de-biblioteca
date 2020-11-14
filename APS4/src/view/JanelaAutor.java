@@ -20,6 +20,7 @@ import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
 import entity.Autor;
+import view.JanelaEditora.ActionBtnDetalhar;
 
 public class JanelaAutor extends JFrame {
 	ActionListener actionBuscarAutor;
@@ -36,9 +37,12 @@ public class JanelaAutor extends JFrame {
 	JButton btnAltExcAutor;
 	JanelaAlterarExcluirAutor janelaAlterarExcluirAutor;
 	
+	JanelaDetalharAutor janelaDetalharAutor;
+	
 	public JanelaAutor() {
 		janelaCadastraAutor = new JanelaCadastraAutor();
 		janelaAlterarExcluirAutor = new JanelaAlterarExcluirAutor();
+		janelaDetalharAutor = new JanelaDetalharAutor();
 		
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		initComponents();
@@ -73,10 +77,13 @@ public class JanelaAutor extends JFrame {
 		add(panelBuscaAutor);
 		
 		JPanel panelBotoes = new JPanel();
+		JButton btnDetalhar = new JButton("Detalhar");
+		btnDetalhar.addActionListener(new ActionBtnDetalhar());
 		btnCadNovoAutor = new JButton("Cadastrar NOVO+");
 		btnCadNovoAutor.addActionListener(new ActionBtnCadNovoAutor());
 		btnAltExcAutor = new JButton("Alterar / Excluir");
 		btnAltExcAutor.addActionListener(new ActionBtnAltExcAutor());
+		panelBotoes.add(btnDetalhar);
 		panelBotoes.add(btnAltExcAutor);
 		panelBotoes.add(btnCadNovoAutor);
 		add(panelBotoes);
@@ -85,6 +92,31 @@ public class JanelaAutor extends JFrame {
 	public void setActionListenerBuscarAutor(ActionListener e) {
 		actionBuscarAutor = e;
 		btnBuscaAutor.addActionListener(actionBuscarAutor);
+	}
+	
+	class ActionBtnDetalhar implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			int linhaSelecionada = tabela.getSelectedRow();
+			
+			if(linhaSelecionada == -1) {
+				JOptionPane.showMessageDialog(null, "Selecione na tabela o Autor que deseja Detalhar");
+			}else {
+				String idAutor = tabela.getValueAt(linhaSelecionada, 0).toString();
+				String nomeAutor = tabela.getValueAt(linhaSelecionada, 1).toString();
+				String sobrenomeAutor = tabela.getValueAt(linhaSelecionada, 2).toString();
+				
+				janelaDetalharAutor.setIdEditora(idAutor, e);
+				janelaDetalharAutor.setNomeEditora(nomeAutor);
+				janelaDetalharAutor.setSiteEditora(sobrenomeAutor);
+				
+				janelaDetalharAutor.setVisible(true);
+				
+				dispose();
+			}
+		}
+		
 	}
 	
 	class ActionBtnAltExcAutor implements ActionListener {

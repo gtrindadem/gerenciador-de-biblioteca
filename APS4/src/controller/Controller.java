@@ -23,10 +23,15 @@ public class Controller {
 		view.setActionListenerCadastraLivro(new ActionCadastraLivro());
 		view.setActionListenerCadastraEditora(new ActionCadastraEditora());
 		view.setActionListenerCadastraAutor(new ActionCadastraAutor());
+		view.setActionListenerExcluirLivro(new ActionExcluirLivro());
 		view.setActionListenerExcluirEditora(new ActionExcluirEditora());
 		view.setActionListenerExcluirAutor(new ActionExcluirAutor());
+		view.setActionListenerAlterarLivro(new ActionAlterarLivro());
 		view.setActionListenerAlterarEditora(new ActionAlterarEditora());
 		view.setActionListenerAlterarAutor(new ActionAlterarAutor());
+		
+		view.setActionListenerDetalharEditora(new ActionDetalharEditora());
+		view.setActionListenerDetalharAutor(new ActionDetalharAutor());
 	}
 
 	class ActionBuscaLivro implements ActionListener{
@@ -105,6 +110,15 @@ public class Controller {
 		
 	}
 	
+	class ActionExcluirLivro implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			dao.excluirLivro(view.getIsbnAlterarExcluirLivro());
+		}
+		
+	}
+	
 	class ActionExcluirEditora implements ActionListener {
 
 		@Override
@@ -123,6 +137,15 @@ public class Controller {
 		
 	}
 	
+	class ActionAlterarLivro implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			dao.alterarLivro(view.getIsbnAlterarExcluirLivro(), view.getPrecoAlterarLivro());
+		}
+		
+	}
+	
 	class ActionAlterarEditora implements ActionListener {
 
 		@Override
@@ -137,6 +160,24 @@ public class Controller {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			dao.alterarAutor(view.getAutorAlterarAutor());
+		}
+		
+	}
+	
+	class ActionDetalharEditora implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			view.listarLivrosDetalharEditora(dao.detalharEditora(view.getIdDetalharEditora()));
+		}
+		
+	}
+	
+	class ActionDetalharAutor implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			view.listarLivrosDetalharAutor(dao.detalharAutor(view.getIdDetalharAutor()));
 		}
 		
 	}

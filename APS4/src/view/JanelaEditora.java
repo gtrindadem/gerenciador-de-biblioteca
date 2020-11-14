@@ -32,12 +32,14 @@ public class JanelaEditora extends JFrame{
 	JanelaCadastraEditora janelaCadastraEditora;
 	
 	JButton btnAltExcEditora;
-	
 	JanelaAlterarExcluirEditora janelaAlterarExcluirEditora;
+	
+	JanelaDetalharEditora janelaDetalharEditora;
 	
 	public JanelaEditora() {
 		janelaCadastraEditora = new JanelaCadastraEditora();
 		janelaAlterarExcluirEditora = new JanelaAlterarExcluirEditora();
+		janelaDetalharEditora = new JanelaDetalharEditora();
 		
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		initComponents();
@@ -73,10 +75,13 @@ public class JanelaEditora extends JFrame{
 		add(panelBuscaEditora);
 		
 		JPanel panelBotoes = new JPanel();
+		JButton btnDetalhar = new JButton("Detalhar");
+		btnDetalhar.addActionListener(new ActionBtnDetalhar());
 		btnCadNovaEditora = new JButton("Cadastrar NOVA+");
 		btnCadNovaEditora.addActionListener(new ActionBtnCadNovaEditora());
 		btnAltExcEditora = new JButton("Alterar / Excluir");
 		btnAltExcEditora.addActionListener(new ActionBtnAltExcEditora());
+		panelBotoes.add(btnDetalhar);
 		panelBotoes.add(btnAltExcEditora);
 		panelBotoes.add(btnCadNovaEditora);
 		add(panelBotoes);
@@ -85,6 +90,31 @@ public class JanelaEditora extends JFrame{
 	public void setActionListenerBuscaEditora(ActionListener e) {
 		actionBuscarEditora = e;
 		btnBuscaEditora.addActionListener(actionBuscarEditora);
+	}
+	
+	class ActionBtnDetalhar implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			int linhaSelecionada = tabela.getSelectedRow();
+			
+			if(linhaSelecionada == -1) {
+				JOptionPane.showMessageDialog(null, "Selecione na tabela a Editora que deseja Detalhar");
+			}else {
+				String idEditora = tabela.getValueAt(linhaSelecionada, 0).toString();
+				String nomeEditora = tabela.getValueAt(linhaSelecionada, 1).toString();
+				String siteEditora = tabela.getValueAt(linhaSelecionada, 2).toString();
+				
+				janelaDetalharEditora.setIdEditora(idEditora, e);
+				janelaDetalharEditora.setNomeEditora(nomeEditora);
+				janelaDetalharEditora.setSiteEditora(siteEditora);
+				
+				janelaDetalharEditora.setVisible(true);
+				
+				dispose();
+			}
+		}
+		
 	}
 	
 	class ActionBtnCadNovaEditora implements ActionListener {

@@ -7,9 +7,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Collection;
 
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -19,18 +21,21 @@ import javax.swing.table.DefaultTableModel;
 import entity.Livro;
 
 public class JanelaLivro extends JFrame {
-	JanelaCadastraLivro janelaCadastraLivro;
-	
 	JTable tabela;
 	DefaultTableModel dtm;
 	
+	ActionListener actionBuscarLivro;
 	JButton btnBuscaLivro;
 	JTextField txtFldBuscaLivro;
 	
 	JButton btnCadNovoLivro;
+	JanelaCadastraLivro janelaCadastraLivro;
+	
+	JanelaAlterarExcluirLivro janelaAlterarExcluirLivro;
 	
 	public JanelaLivro() {
 		janelaCadastraLivro = new JanelaCadastraLivro();
+		janelaAlterarExcluirLivro = new JanelaAlterarExcluirLivro();
 		
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		initComponents();
@@ -38,7 +43,7 @@ public class JanelaLivro extends JFrame {
 
 	void initComponents() {
 		setTitle("Consultar Livros");
-		setLayout(new BorderLayout());
+		setLayout(new BoxLayout(getContentPane(), BoxLayout.PAGE_AXIS));
 		setSize(600, 330);
 		setLocationRelativeTo(null);
 		
@@ -56,7 +61,7 @@ public class JanelaLivro extends JFrame {
 		tabela.getColumnModel().getColumn(3).setMaxWidth(60);
 		JScrollPane scrollPane = new JScrollPane(tabela);
 		scrollPane.setPreferredSize(new Dimension(200, 200));
-		add(scrollPane, BorderLayout.PAGE_START);
+		add(scrollPane);
 		
 		// Area da busca
 		JPanel panelBuscaLivro = new JPanel(new FlowLayout());
@@ -65,21 +70,51 @@ public class JanelaLivro extends JFrame {
 		btnBuscaLivro = new JButton("Buscar");
 		panelBuscaLivro.add(txtFldBuscaLivro);
 		panelBuscaLivro.add(btnBuscaLivro);
-		panelBuscaLivro.add(new JLabel("Duplo click na tabela para alterar/excluir um livro"));
-		add(panelBuscaLivro, BorderLayout.CENTER);
+		add(panelBuscaLivro);
 		
+		JPanel panelBotoes = new JPanel();
+		JButton btnAltExcLivro = new JButton("Alterar preço / Excluir");
+		btnAltExcLivro.addActionListener(new ActionBtnAltExcLivro());
 		btnCadNovoLivro = new JButton("Cadastrar NOVO+");
 		btnCadNovoLivro.addActionListener(new ActionBtnCadNovoLivro());
-		add(btnCadNovoLivro, BorderLayout.PAGE_END);
+		panelBotoes.add(btnAltExcLivro);
+		panelBotoes.add(btnCadNovoLivro);
+		add(panelBotoes);
 		
 	}
 	
 	public void setActionListenerBuscarLivro(ActionListener e) {
+		actionBuscarLivro = e;
 		btnBuscaLivro.addActionListener(e);
 	}
 	
 	public void setActionListenerCadastrarLivro(ActionListener e) {
 		janelaCadastraLivro.setActionListenerCadastrarLivro(e);
+	}
+	
+	class ActionBtnAltExcLivro implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			int linhaSelecionada = tabela.getSelectedRow();
+			
+			if(linhaSelecionada == -1) {
+				JOptionPane.showMessageDialog(null, "Selecione na tabela o Livro que deseja Alterar Preço/Excluir");
+			}else {
+				String isbn = tabela.getValueAt(linhaSelecionada, 0).toString();
+				String titulo = tabela.getValueAt(linhaSelecionada, 1).toString();
+				String preco = tabela.getValueAt(linhaSelecionada, 3).toString();
+				
+				janelaAlterarExcluirLivro.setIsbn(isbn);
+				janelaAlterarExcluirLivro.setTitulo(titulo);
+				janelaAlterarExcluirLivro.setPreco(preco);
+				
+				janelaAlterarExcluirLivro.setVisible(true);
+				
+				dispose();
+			}
+		}
+		
 	}
 	
 	class ActionBtnCadNovoLivro implements ActionListener {
