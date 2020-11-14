@@ -28,9 +28,6 @@ public class JanelaHome extends JFrame implements View {
 	JanelaAutor janelaAutor;
 	JanelaCadastraAutor janelaCadastraAutor;
 	
-	ActionListener actionBuscarLivro;
-	ActionListener actionCadastrarLivro;
-	
 	JButton btnLivros;
 	JButton btnEditoras;
 	JButton btnAutores;

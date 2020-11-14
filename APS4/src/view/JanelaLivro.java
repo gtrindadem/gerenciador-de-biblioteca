@@ -101,8 +101,8 @@ public class JanelaLivro extends JFrame {
 			if(linhaSelecionada == -1) {
 				JOptionPane.showMessageDialog(null, "Selecione na tabela o Livro que deseja Alterar Preço/Excluir");
 			}else {
-				String isbn = tabela.getValueAt(linhaSelecionada, 0).toString();
-				String titulo = tabela.getValueAt(linhaSelecionada, 1).toString();
+				String titulo = tabela.getValueAt(linhaSelecionada, 0).toString();
+				String isbn = tabela.getValueAt(linhaSelecionada, 1).toString();
 				String preco = tabela.getValueAt(linhaSelecionada, 3).toString();
 				
 				janelaAlterarExcluirLivro.setIsbn(isbn);
