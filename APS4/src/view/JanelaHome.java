@@ -19,14 +19,9 @@ import entity.Editora;
 import entity.Livro;
 
 public class JanelaHome extends JFrame implements View {
-	JanelaLivro janelaLivro;
-	JanelaCadastraLivro janelaCadastraLivro;
-	
+	JanelaLivro janelaLivro;	
 	JanelaEditora janelaEditora;
-	JanelaCadastraEditora janelaCadastraEditora;
-	
 	JanelaAutor janelaAutor;
-	JanelaCadastraAutor janelaCadastraAutor;
 	
 	JButton btnLivros;
 	JButton btnEditoras;

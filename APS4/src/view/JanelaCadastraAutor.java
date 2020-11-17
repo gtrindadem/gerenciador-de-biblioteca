@@ -16,8 +16,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import view.JanelaCadastraEditora.ActionBtnCadastrarEditora;
-
 public class JanelaCadastraAutor extends JFrame {
 	ActionListener actionCadastrarAutor;
 	

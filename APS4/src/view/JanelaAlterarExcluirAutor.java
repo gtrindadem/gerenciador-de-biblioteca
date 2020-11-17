@@ -14,10 +14,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import view.JanelaAlterarExcluirEditora.ActionBtnCancelar;
-import view.JanelaAlterarExcluirEditora.ActionBtnExcluir;
-import view.JanelaAlterarExcluirEditora.ActionBtnSalvar;
-
 public class JanelaAlterarExcluirAutor extends JFrame {
 	JTextField txtIdAutor;
 	JTextField txtNomeAutor;

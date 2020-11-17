@@ -1,6 +1,5 @@
 package view;
 
-import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
@@ -396,7 +395,6 @@ public class JanelaCadastraLivro extends JFrame {
 	}
 	
 	public int getIdEditora() {
-		System.out.println("a:" + iptIdEditora.getText());
 		return Integer.parseInt(iptIdEditora.getText());
 	}
 	

@@ -1,6 +1,5 @@
 package view;
 
-import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
@@ -20,7 +19,6 @@ import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
 import entity.Autor;
-import view.JanelaEditora.ActionBtnDetalhar;
 
 public class JanelaAutor extends JFrame {
 	ActionListener actionBuscarAutor;
